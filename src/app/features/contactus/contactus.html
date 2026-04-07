@@ -1,0 +1,65 @@
+<div class="contact-container">
+
+  <!-- HEADER -->
+  <div class="contact-header">
+    <h1>Looking Forward to Hear From You</h1>
+    <p>We’d love to connect. Reach out for orders, queries, or collaborations.</p>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="contact-grid">
+
+    <!-- LEFT: INFO -->
+    <div class="contact-info">
+
+      <div class="info-card">
+        <h3>📍 Address</h3>
+        <p>
+          No 25, Sigil Raja Veedhi,<br>
+          Ramanathapuram,<br>
+          Ramnad Dt, Tamil Nadu
+        </p>
+      </div>
+
+      <div class="info-card clickable" (click)="callNow()">
+        <h3>📞 Phone</h3>
+        <p>{{ phone }}</p>
+      </div>
+
+      <div class="info-card clickable" (click)="sendMail()">
+        <h3>✉️ Email</h3>
+        <p>{{ email }}</p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: CONTACT FORM -->
+    <div class="contact-form">
+
+      <h2>Send a Message</h2>
+
+      <form>
+
+        <div class="form-group">
+          <input type="text" placeholder="Your Name" required>
+        </div>
+
+        <div class="form-group">
+          <input type="email" placeholder="Your Email" required>
+        </div>
+
+        <div class="form-group">
+          <textarea rows="5" placeholder="Your Message"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Send Message
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

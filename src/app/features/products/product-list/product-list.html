@@ -1,0 +1,128 @@
+<div class="layout">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+
+    <h3>Categories</h3>
+
+    @for (cat of categories; track cat) {
+      <div class="category-block">
+
+        <!-- CATEGORY TITLE -->
+        <div 
+          class="category-title"
+          [class.active]="cat === selectedCategory"
+          (click)="selectCategory(cat); toggleCategory(cat)"
+        >
+          <span>{{ cat }}</span>
+<small>({{ groupedProducts[cat]?.length }})</small>
+        </div>
+
+        <!-- SUBCATEGORY PREVIEW -->
+        @if (expandedCategory === cat) {
+          <div class="subcategory">
+
+           @for (
+  p of (
+    expandedFullCategory === cat
+      ? groupedProducts[cat]
+      : groupedProducts[cat].slice(0, 4)
+  );
+  track p.id
+) {
+              <a 
+                class="sub-item"
+                [routerLink]="['/products', p.id]"
+              >
+                {{ p.name }}
+              </a>
+            }
+
+            <!-- VIEW ALL -->
+           <div style="cursor: pointer;" class="view-all" (click)="toggleViewAll(cat)">
+  {{ expandedFullCategory === cat ? 'Show less ↑' : 'View all →' }}
+</div>
+
+          </div>
+        }
+
+      </div>
+    }
+
+  </aside>
+
+  <!-- ================= CONTENT ================= -->
+  <section class="content">
+
+    <!-- HEADER -->
+    <div class="content-header">
+
+      <!-- LEFT -->
+      <div class="title-block">
+        <h2>{{ selectedCategory }}</h2>
+        <p class="count">
+          {{ filteredProducts.length }} products
+        </p>
+      </div>
+
+      <!-- RIGHT CONTROLS -->
+      <div class="controls">
+
+        <!-- SEARCH -->
+        <div class="search-box">
+          <input 
+            type="text"
+            placeholder="Search products..."
+            [(ngModel)]="searchText"
+            (input)="applyFilters()"
+          />
+
+          @if (searchText) {
+            <span 
+              class="clear-btn"
+              (click)="searchText=''; applyFilters()"
+            >
+              ✕
+            </span>
+          }
+        </div>
+
+        <!-- SORT -->
+        <select 
+          [(ngModel)]="sortOption"
+          (change)="applyFilters()"
+        >
+          <option value="default">Sort</option>
+          <option value="name-asc">Name A → Z</option>
+          <option value="name-desc">Name Z → A</option>
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+
+      @if (filteredProducts.length === 0) {
+        <div class="empty-state">
+          <h3>No products found</h3>
+          <p>Try changing your search or category</p>
+        </div>
+      }
+
+     @for (product of filteredProducts; track product.id; let i = $index) {
+  <div [id]="'product-' + product.id">
+    <app-product-card 
+      [product]="product"
+      [priority]="i < 4"
+      (productClick)="selectProduct(product)">
+    </app-product-card>
+  </div>
+}
+
+    </div>
+
+  </section>
+
+</div>

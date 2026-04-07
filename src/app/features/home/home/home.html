@@ -1,0 +1,93 @@
+<!-- HERO (SPLIT - HIGH CONVERSION) -->
+<section class="hero-split">
+
+  <div class="hero-left">
+    <h1>
+      Handcrafted Wooden <span>Elegance</span>
+    </h1>
+
+    <p>
+      Crafting spaces with timeless design and quality.
+    </p>
+
+    <div class="hero-actions">
+      <button routerLink="/products" class="primary-btn">
+        Explore
+      </button>
+    </div>
+
+    <!-- <div class="hero-trust">
+      <span>✔ 500+ Happy Homes</span>
+      <span>✔ Premium Quality</span>
+    </div> -->
+  </div>
+
+  <div class="hero-right">
+    <img src="assets/logo1.jpg" />
+  </div>
+
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="section">
+  <div class="section-header">
+    <h2>New Arrivals</h2>
+    <a routerLink="/products">View All →</a>
+  </div>
+
+  <div class="grid">
+  @for (product of newArrivals; track product.id) {
+    <div class="card-wrap">
+      <app-product-card 
+        [product]="product"
+        (productClick)="goToProduct($event)">
+      </app-product-card>
+    </div>
+  }
+</div>
+</section>
+
+<!-- FEATURED -->
+<section class="section alt">
+  <div class="section-header">
+    <h2>Featured Products</h2>
+  </div>
+
+ <div class="grid">
+  @for (product of featuredProducts; track product.id) {
+    <div class="card-wrap">
+      <app-product-card 
+        [product]="product"
+        (productClick)="goToProduct($event)">
+      </app-product-card>
+    </div>
+  }
+</div>
+</section>
+
+<!-- WHY -->
+<section class="why">
+  <h2 class="why-title">Why Choose Us</h2>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <h3>Premium Wood</h3>
+      <p>Only teak & walnut — no compromise</p>
+    </div>
+
+    <div class="why-card">
+      <h3>Handcrafted</h3>
+      <p>Each product finished manually</p>
+    </div>
+
+    <div class="why-card">
+      <h3>Long Lasting</h3>
+      <p>Built to last for years</p>
+    </div>
+
+    <div class="why-card">
+      <h3>Eco Friendly</h3>
+      <p>Sustainable materials only</p>
+    </div>
+  </div>
+</section>

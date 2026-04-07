@@ -1,0 +1,93 @@
+<div class="container">
+
+  @if (loading) {
+    <p class="loading">Loading...</p>
+  }
+
+  @if (!loading && product) {
+
+    <button class="back-btn" (click)="goBack()">
+  ← Back
+</button>
+
+    <div class="product">
+
+      <!-- LEFT -->
+      <div class="gallery">
+
+        <div class="main-image">
+          <img [src]="selectedImage" />
+        </div>
+
+        <div class="thumbs">
+          @for (img of product.images; track img) {
+            <img 
+              [src]="img"
+              (click)="selectedImage = img"
+              [class.active]="img === selectedImage"
+            />
+          }
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="info">
+
+        <h1>{{ product.name }}</h1>
+
+        <div class="price">
+          ₹ {{ selectedVariant?.price }}
+        </div>
+
+        <!-- TRUST BADGES -->
+        <div class="badges">
+          <span>Handcrafted</span>
+          <span>Made in India</span>
+          <span>Eco Friendly</span>
+        </div>
+
+        @if (selectedVariant) {
+          <p class="meta">{{ selectedVariant.dimensions }}</p>
+        }
+
+        <!-- DESCRIPTION -->
+        <div class="desc">
+         <p>{{product.description}}</p>
+        </div>
+
+        <!-- VARIANTS -->
+        @if (product.variants.length > 1) {
+
+          <div class="variants">
+
+            <p class="label">Select Option</p>
+
+            <div class="options">
+              @for (v of product.variants; track v.type) {
+                <div
+                  class="option"
+                  (click)="selectVariant(v)"
+                  [class.active]="v === selectedVariant"
+                >
+                  {{ v.type }}
+                </div>
+              }
+            </div>
+
+          </div>
+
+        }
+
+        <!-- CTA -->
+        <button class="cta" (click)="openWhatsApp()">
+          Enquire on WhatsApp
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

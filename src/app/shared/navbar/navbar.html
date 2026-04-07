@@ -1,0 +1,48 @@
+<nav class="navbar">
+
+  <!-- LEFT -->
+  <div class="left" routerLink="/">
+    <img src="/assets/logo1.jpg" class="logo-img" />
+    <span class="brand">The Wooden Castle</span>
+  </div>
+
+  <!-- CENTER LINKS -->
+  <div class="links" [class.open]="menuOpen">
+
+   <a 
+  routerLink="/" 
+  routerLinkActive="active" 
+  [routerLinkActiveOptions]="{ exact: true }"
+  (click)="closeMenu()"
+>
+  Home
+</a>
+
+<a 
+  routerLink="/products" 
+  routerLinkActive="active"
+  (click)="closeMenu()"
+>
+  Products
+</a>
+    <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a>
+    <a routerLink="/contactus" routerLinkActive="active" (click)="closeMenu()">Contact</a>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <!-- OPTIONAL CTA -->
+    <!-- <button class="cta-btn">
+      Shop Now
+    </button> -->
+
+    <!-- MOBILE MENU BUTTON -->
+    <div class="menu-btn" (click)="toggleMenu()">
+      ☰
+    </div>
+
+  </div>
+
+</nav>

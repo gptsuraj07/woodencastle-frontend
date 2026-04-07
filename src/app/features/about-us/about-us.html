@@ -1,0 +1,74 @@
+<section class="about-wrapper">
+
+  <div class="container about-layout">
+
+    <!-- TEXT BLOCK -->
+    <div class="about-text reveal">
+      <h1>
+        Crafted with Purpose.<br>
+        Designed for Experience.
+      </h1>
+
+      <div class="divider"></div>
+
+      <p>
+        We redefine kitchen aesthetics and food styling through handcrafted wooden creations.
+      </p>
+
+      <p>
+        Rooted in a legacy timber business, The Wooden Castle brings tradition into modern living.
+      </p>
+
+      <p>
+        Every piece is uniquely handcrafted, sustainable, and proudly Made in India.
+      </p>
+
+      <button class="primary-btn">
+        Take a Tour →
+      </button>
+    </div>
+
+    <!-- VISUAL BLOCK -->
+    <div class="visual-block reveal">
+
+      <div class="logo-card">
+        <img src="assets/logo.jpg" alt="logo">
+      </div>
+
+      <div class="floating-badge">
+        Handcrafted • Sustainable • Authentic
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- EXPLORE -->
+<section class="explore-section">
+
+  <div class="container">
+
+    <div class="explore-header reveal">
+      <h2>Have a Look Through</h2>
+      <div class="divider center-line"></div>
+    </div>
+
+    <div class="grid">
+
+      @for (item of gallery; track item) {
+        <div class="card reveal">
+          <div class="card-inner">
+            <span>{{ item.title }}</span>
+            <div class="hover-line"></div>
+          </div>
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+</section>

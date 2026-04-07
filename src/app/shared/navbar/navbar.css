@@ -1,0 +1,159 @@
+/* ================= NAVBAR ================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 40px;
+  background: #ffffff;
+
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+/* ================= LEFT ================= */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 199px;
+  height: 57px;
+  /* border-radius: 50%; */
+  object-fit: cover;
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #6b4f3a;
+  letter-spacing: 0.5px;
+}
+
+/* ================= LINKS ================= */
+.links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  position: relative;
+  transition: 0.25s;
+}
+
+/* underline hover effect */
+.links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: #6b4f3a;
+  transition: 0.3s;
+}
+
+.links a:hover::after {
+  width: 100%;
+}
+
+.links a:hover {
+  color: #6b4f3a;
+}
+
+/* active route */
+.links a.active {
+  color: #6b4f3a;
+}
+
+.links a.active::after {
+  width: 100%;
+}
+
+/* ================= RIGHT ================= */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* CTA BUTTON */
+.cta-btn {
+  padding: 8px 16px;
+  background: #c49a6c;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  background: #a97c50;
+}
+
+/* MENU BUTTON (hidden on desktop) */
+.menu-btn {
+  display: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .navbar {
+    padding: 12px 20px;
+  }
+
+  /* hide links initially */
+  .links {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+
+    flex-direction: column;
+    background: #fff;
+    padding: 15px 0;
+
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: 0.3s;
+  }
+
+  /* show menu */
+  .links.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .links a {
+    padding: 10px 0;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .cta-btn {
+    display: none; /* optional */
+  }
+}

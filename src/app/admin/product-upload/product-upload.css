@@ -1,0 +1,500 @@
+/* =========================
+   LAYOUT
+========================= */
+.admin-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f4f6f9;
+  font-family: 'Inter', sans-serif;
+}
+
+/* =========================
+   LEFT PANEL (FIXED)
+========================= */
+.form-section {
+  width: 340px;
+  min-width: 320px;
+  background: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #eee;
+
+  /* KEY FIX */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+
+  box-shadow: 2px 0 10px rgba(0,0,0,0.04);
+}
+
+/* Header */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Inputs */
+.form-section input,
+.form-section textarea {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-section input:focus,
+.form-section textarea:focus {
+  border-color: #000;
+  outline: none;
+}
+
+/* =========================
+   CARDS
+========================= */
+.card {
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #eee;
+}
+
+.card h4 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* =========================
+   VARIANTS
+========================= */
+.variant-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.variant-row input {
+  flex: 1;
+}
+
+.variant-row button {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+.preview {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.preview img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #000, #333);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+}
+
+/* =========================
+   RIGHT PANEL
+========================= */
+.list-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px;
+}
+
+/* Header */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* =========================
+   GRID
+========================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+/* =========================
+   PRODUCT CARD
+========================= */
+.product-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+.product-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+/* Info */
+.info {
+  padding: 12px;
+}
+
+.info h3 {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.price {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.category {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Buttons */
+.edit {
+  background: #007bff;
+  color: white;
+}
+
+.delete {
+  background: #ff4d4d;
+  color: white;
+}
+
+/* Hover */
+.edit:hover {
+  background: #0062cc;
+}
+
+.delete:hover {
+  background: #e60000;
+}
+
+/* =========================
+   SCROLLBAR (premium feel)
+========================= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+
+  .admin-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .form-section {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .list-section {
+    padding: 15px;
+  }
+
+}
+
+/* =========================
+   LOGIN PAGE (FULL SCREEN)
+========================= */
+.login-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #f5f7fa, #e4e8ec);
+  font-family: 'Inter', sans-serif;
+}
+
+/* =========================
+   LOGIN BOX
+========================= */
+.login-box {
+  width: 340px;
+  padding: 30px 25px;
+
+  background: white;
+  border-radius: 14px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  animation: fadeIn 0.4s ease;
+}
+
+/* =========================
+   TITLE
+========================= */
+.login-box h2 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.login-box input {
+  width: 91%;
+  padding: 12px 14px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.login-box input:focus {
+  border-color: black;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.login-box button {
+  width: 100%;
+  padding: 12px;
+
+  background: linear-gradient(135deg, #000, #333);
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  font-weight: 500;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-box button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ERROR (OPTIONAL)
+========================= */
+.login-error {
+  color: red;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 480px) {
+
+  .login-box {
+    width: 90%;
+    padding: 25px 20px;
+  }
+
+  .login-box h2 {
+    font-size: 18px;
+  }
+
+}
+
+/* =========================
+   MODAL OVERLAY
+========================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+}
+
+/* =========================
+   MODAL BOX
+========================= */
+.modal-box {
+  width: 320px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+
+  text-align: center;
+
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-box h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.modal-box p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #eee;
+}
+
+/* Delete */
+.delete-btn {
+  background: red;
+  color: white;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

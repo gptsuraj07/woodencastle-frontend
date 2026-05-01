@@ -1,0 +1,233 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-product-upload',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './product-upload.html',
+  styleUrl: './product-upload.css',
+})
+export class ProductUpload implements OnInit {
+
+  name = '';
+  category = '';
+  description = '';
+  files: File[] = [];
+  showDeleteModal = false;
+selectedProduct: any = null;
+  isAuthenticated = false;
+  token: string = '';
+  username = '';
+  password = '';
+  existingImages: string[] = [];
+
+  products: any[] = [];
+
+  variants: any[] = [
+    { label: 'Standard', price: 0, dimensions: '' }
+  ];
+
+  editMode = false;
+  editingId: string | null = null;
+
+  ngOnInit() {
+    const savedToken = localStorage.getItem('token');
+
+    if (savedToken) {
+      this.token = savedToken;
+      this.isAuthenticated = true;
+      this.fetchProducts();
+    }
+  }
+
+  // LOGIN
+  login() {
+    const formData = new FormData();
+    formData.append('username', this.username);
+    formData.append('password', this.password);
+
+    fetch('http://localhost:8000/admin/login', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => {
+      if (!res.ok) throw new Error();
+      return res.json();
+    })
+    .then(data => {
+      this.token = data.access_token;
+      localStorage.setItem('token', this.token);
+      this.isAuthenticated = true;
+      this.fetchProducts();
+    })
+    .catch(() => alert('Login failed'));
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.isAuthenticated = false;
+    this.token = '';
+  }
+
+  // FETCH PRODUCTS
+  fetchProducts() {
+    fetch('http://localhost:8000/products')
+      .then(res => res.json())
+      .then(data => this.products = data);
+  }
+
+  // FILE
+onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files) return;
+
+  const newFiles = Array.from(input.files);
+
+  this.files = [...this.files, ...newFiles].slice(0, 4);
+
+  input.value = ''; // 🔥 important
+}
+  // SUBMIT
+  submitForm() {
+
+    const formData = new FormData();
+
+    formData.append('name', this.name);
+    formData.append('category', this.category);
+    formData.append('description', this.description);
+    formData.append('variants', JSON.stringify(this.variants));
+    formData.append('existing_images', JSON.stringify(this.existingImages));
+
+    if (this.files.length > 0) {
+      this.files.forEach(file => formData.append('files', file));
+    }
+
+    const url = this.editMode
+      ? `http://localhost:8000/admin/update-product/${this.editingId}`
+      : `http://localhost:8000/admin/castle-products`;
+
+    const method = this.editMode ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: formData
+    })
+    .then(() => {
+      this.resetForm();
+      this.fetchProducts();
+    });
+  }
+
+  // DELETE
+  deleteProduct(id: string) {
+    fetch(`http://localhost:8000/admin/delete-product/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
+    .then(() => this.fetchProducts());
+  }
+
+
+  // EDIT
+editProduct(product: any) {
+
+  this.name = product.name;
+  this.category = product.category;
+  this.description = product.description;
+
+  // variants (already correct)
+  if (product.variants?.length) {
+    this.variants = product.variants.map((v: any) => ({
+      label: v.label || v.type || 'Default',
+      price: v.price,
+      dimensions: v.dimensions || ''
+    }));
+  }
+
+  // 🔥 THIS IS WHAT YOU MISSED
+  this.existingImages = [...(product.images || [])];
+
+  // reset new uploads
+  this.files = [];
+
+  this.editMode = true;
+  this.editingId = product.id;
+}
+
+  // RESET
+  resetForm() {
+    this.name = '';
+    this.category = '';
+    this.description = '';
+    this.files = [];
+    this.variants = [{ label: 'Standard', price: 0, dimensions: '' }];
+    this.editMode = false;
+    this.editingId = null;
+  }
+
+
+  removeFile(index: number) {
+  if (index < 0 || index >= this.files.length) return;
+
+  this.files.splice(index, 1);
+
+  // Force UI refresh (Angular usually handles it, but safe)
+  this.files = [...this.files];
+}
+
+  // HELPERS
+getPreview(file: File): string {
+
+  const name = file.name.toLowerCase();
+
+  // 🚫 HEIC not supported in browser
+  if (name.endsWith('.heic') || name.endsWith('.heif')) {
+    return 'assets/heic-placeholder.png';
+  }
+
+  return URL.createObjectURL(file);
+}
+
+removeExistingImage(img: string) {
+  this.existingImages = this.existingImages.filter(i => i !== img);
+}
+
+
+  getProductPrice(product: any): number {
+    return product?.variants?.[0]?.price || 0;
+  }
+
+  addVariant() {
+    this.variants.push({ label: '', price: 0, dimensions: '' });
+  }
+
+  removeVariant(i: number) {
+    this.variants.splice(i, 1);
+  }
+
+  openDeleteModal(product: any) {
+  this.selectedProduct = product;
+  this.showDeleteModal = true;
+}
+
+confirmDelete() {
+  if (!this.selectedProduct) return;
+
+  this.deleteProduct(this.selectedProduct.id);
+
+  this.showDeleteModal = false;
+  this.selectedProduct = null;
+}
+
+cancelDelete() {
+  this.showDeleteModal = false;
+  this.selectedProduct = null;
+}
+}

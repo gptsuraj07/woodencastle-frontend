@@ -6,87 +6,175 @@
 
   @if (!loading && product) {
 
-    <button class="back-btn" (click)="goBack()">
-  ← Back
-</button>
+    <!-- BACK -->
+    <button class="back-btn" (click)="goBack()">←</button>
 
     <div class="product">
 
-      <!-- LEFT -->
+      <!-- LEFT: GALLERY -->
       <div class="gallery">
 
         <div class="main-image">
           <img [src]="selectedImage" />
         </div>
 
-        <div class="thumbs">
-          @for (img of product.images; track img) {
-            <img 
-              [src]="img"
-              (click)="selectedImage = img"
-              [class.active]="img === selectedImage"
-            />
-          }
-        </div>
+        @if (product.images.length > 1) {
+          <div class="thumbs">
+            @for (img of product.images; track img) {
+              <img 
+                [src]="img"
+                (click)="selectedImage = img"
+                [class.active]="img === selectedImage"
+              />
+            }
+          </div>
+        }
 
       </div>
 
-      <!-- RIGHT -->
+      <!-- RIGHT: INFO -->
       <div class="info">
 
-        <h1>{{ product.name }}</h1>
+        <h1 class="title">{{ product.name }}</h1>
 
-        <div class="price">
-          ₹ {{ selectedVariant?.price }}
+        <!-- PRICE -->
+        <div class="price-box">
+          <div class="price">₹ {{ getPrice() }}</div>
+          <span class="sub">Inclusive of all taxes</span>
         </div>
 
-        <!-- TRUST BADGES -->
+        <!-- BADGES -->
         <div class="badges">
           <span>Handcrafted</span>
           <span>Made in India</span>
           <span>Eco Friendly</span>
         </div>
 
+        <!-- VARIANTS -->
+      @if ((product.variants ?? []).length > 1) {
+  <div class="variants">
+    <p class="label">Select Option</p>
+
+    <div class="options">
+      @for (v of product.variants ?? []; track v.label) {
+        <div
+          class="option"
+          (click)="selectVariant(v)"
+          [class.active]="v === selectedVariant"
+        >
+          {{ v.label || v.type }}
+        </div>
+      }
+    </div>
+  </div>
+}
+
+        <!-- META -->
         @if (selectedVariant) {
           <p class="meta">{{ selectedVariant.dimensions }}</p>
         }
 
-        <!-- DESCRIPTION -->
-        <div class="desc">
-         <p>{{product.description}}</p>
-        </div>
-
-        <!-- VARIANTS -->
-        @if (product.variants.length > 1) {
-
-          <div class="variants">
-
-            <p class="label">Select Option</p>
-
-            <div class="options">
-              @for (v of product.variants; track v.type) {
-                <div
-                  class="option"
-                  (click)="selectVariant(v)"
-                  [class.active]="v === selectedVariant"
-                >
-                  {{ v.type }}
-                </div>
-              }
-            </div>
-
-          </div>
-
-        }
-
         <!-- CTA -->
         <button class="cta" (click)="openWhatsApp()">
-          Enquire on WhatsApp
+          Get Custom Quote on WhatsApp
         </button>
+        <p class="cta-sub">⚡ Usually replies within 10 mins</p>
+
+        <!-- DESCRIPTION -->
+        <div class="desc-box">
+          <h3>Product Description</h3>
+          <ul>
+            <li>{{ product.description }}</li>
+          </ul>
+        </div>
 
       </div>
 
     </div>
+
+    <!-- REVIEWS -->
+  <!-- REVIEWS -->
+<div class="reviews">
+
+  <h2>Customer Reviews</h2>
+
+  <!-- REVIEW FORM -->
+  <div class="review-form">
+
+    <div class="form-row">
+      <input 
+        type="text"
+        [(ngModel)]="newReview.name"
+        placeholder="Your name"
+      />
+    </div>
+
+    <!-- RATING -->
+    <div class="rating">
+      <span 
+        *ngFor="let star of [1,2,3,4,5]"
+        (click)="setRating(star)"
+        (mouseenter)="hoverRating = star"
+        (mouseleave)="hoverRating = 0"
+        [class.active]="star <= (hoverRating || newReview.rating)">
+        ★
+      </span>
+    </div>
+
+    <!-- COMMENT -->
+    <textarea 
+      [(ngModel)]="newReview.comment"
+      placeholder="Share your experience..."
+    ></textarea>
+
+    <!-- UPLOAD -->
+    <label class="upload-box">
+      <input type="file" (change)="handleImageUpload($event)" multiple hidden />
+      <span>+ Add Photos</span>
+    </label>
+
+    <!-- PREVIEW -->
+    <div class="preview" *ngIf="newReview.images.length">
+      <div class="img-wrap" *ngFor="let img of newReview.images">
+        <img [src]="img" />
+      </div>
+    </div>
+
+    <button class="submit-btn" (click)="submitReview()">
+      Submit Review
+    </button>
+
+  </div>
+
+  <!-- REVIEW LIST -->
+  <div class="review-list">
+
+    @for (r of reviews; track r) {
+      <div class="review-card">
+
+        <div class="top">
+          <p class="user">{{ r.name }}</p>
+          <div class="stars">
+            <span *ngFor="let s of [1,2,3,4,5]">
+              {{ s <= r.rating ? '★' : '☆' }}
+            </span>
+          </div>
+        </div>
+
+        <p class="comment">{{ r.comment }}</p>
+
+        <div class="images" *ngIf="r.images.length">
+          <img *ngFor="let img of r.images" [src]="img" />
+        </div>
+
+      </div>
+    }
+
+  </div>
+
+</div>
+    <!-- MOBILE STICKY CTA -->
+   
 
   }
 

@@ -7,6 +7,8 @@ import { Home } from './features/home/home/home';
 import { Login } from './features/admin/login/login';
 import { Dashboard } from './features/admin/dashboard/dashboard';
 import { ProductForm } from './features/admin/product-form/product-form';
+import { ProductService } from './features/products/product.service';
+import { ProductUpload } from './admin/product-upload/product-upload';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -14,7 +16,7 @@ export const routes: Routes = [
   { path: 'products', component: ProductList },
   { path: 'products/:id', component: ProductDetail },
 
-  { path: 'admin', component: Login },
+  { path: 'admin', component: ProductUpload },
   { path: 'admin/dashboard', component: Dashboard },
   { path: 'admin/add-product', component: ProductForm },
   {

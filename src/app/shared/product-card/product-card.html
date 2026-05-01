@@ -1,6 +1,6 @@
 <div class="card">
 
-  <div class="image-container">
+  <div class="image-container" (click)="handleClick($event)">
 <img 
   [src]="getOptimizedImage(product.images[0])"
   (error)="onImageError($event)"

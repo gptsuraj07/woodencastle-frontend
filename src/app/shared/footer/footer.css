@@ -87,4 +87,8 @@
   .footer-brand {
     margin: auto;
   }
+
+  .footer-logo{
+    margin-left: 65px;
+  }
 }

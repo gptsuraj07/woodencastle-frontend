@@ -1,7 +1,8 @@
 export interface Variant {
-  type: string;
-  dimensions: string;
+  label?: string;      // 👈 NEW
+  type?: string;       // 👈 OLD (keep for backward compatibility)
   price: number;
+  dimensions?: string;
 }
 
 export interface Product {
@@ -10,6 +11,6 @@ export interface Product {
   category: string;
   description: string;
   images: string[];
-
-  variants: Variant[];
+price?:number;
+  variants?: Variant[];
 }

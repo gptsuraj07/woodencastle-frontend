@@ -1,0 +1,180 @@
+@if (!isAuthenticated) {
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Admin Login</h2>
+
+      <input [(ngModel)]="username" placeholder="Username">
+      <input [(ngModel)]="password" type="password" placeholder="Password">
+
+      <button (click)="login()">Login</button>
+    </div>
+  </div>
+}
+
+@if (isAuthenticated) {
+
+<div class="admin-container">
+
+  <!-- LEFT PANEL -->
+  <div class="form-section">
+
+    <div class="form-header">
+      <h2>{{ editMode ? 'Edit Product' : 'Add Product' }}</h2>
+
+      @if (editMode) {
+        <button type="button" (click)="resetForm()">Cancel</button>
+      }
+
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+
+    <!-- BASIC INFO -->
+    <div class="card">
+      <h4>Basic Info</h4>
+
+      <input [(ngModel)]="name" placeholder="Product Name">
+      <input [(ngModel)]="category" placeholder="Category">
+      <textarea [(ngModel)]="description" placeholder="Description"></textarea>
+    </div>
+
+    <!-- VARIANTS -->
+    <div class="card">
+      <h4>Variants</h4>
+
+      @for (v of variants; track $index) {
+        <div class="variant-row">
+
+          <input
+            [(ngModel)]="v.label"
+            name="label-{{$index}}"
+            placeholder="Variant (Small, Large)"
+          >
+
+          <input
+            [(ngModel)]="v.dimensions"
+            name="dim-{{$index}}"
+            placeholder="Dimensions (optional)"
+          >
+
+          <input
+            type="number"
+            [(ngModel)]="v.price"
+            name="price-{{$index}}"
+            placeholder="Price"
+          >
+
+          <button type="button" (click)="removeVariant($index)">✕</button>
+
+        </div>
+      }
+
+      <button type="button" (click)="addVariant()">+ Add Variant</button>
+    </div>
+
+    <!-- IMAGES -->
+    <div class="card">
+      <h4>Images</h4>
+
+      <input type="file" (change)="onFileChange($event)" multiple>
+
+      <p class="file-count">
+  {{ files.length }} / 4 images selected
+</p>
+
+<div class="preview">
+
+  <!-- EXISTING IMAGES -->
+  @for (img of existingImages; track img) {
+    <div class="preview-item">
+
+      <img [src]="img">
+
+      <button type="button" (click)="removeExistingImage(img)">✕</button>
+
+    </div>
+  }
+
+  <!-- NEW FILES -->
+  @for (file of files; track $index) {
+    <div class="preview-item">
+
+      <img [src]="getPreview(file)">
+
+      <button type="button" (click)="removeFile($index)">✕</button>
+
+    </div>
+  }
+
+</div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="submit-btn" (click)="submitForm()">
+      {{ editMode ? 'Update Product' : 'Add Product' }}
+    </button>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="list-section">
+
+    <div class="list-header">
+      <h2>Products</h2>
+      <span>Total: {{ products.length }}</span>
+    </div>
+
+    <div class="grid">
+
+      @for (product of products; track product.id) {
+
+        <div class="product-card" (click)="editProduct(product)">
+
+          <img [src]="product.images[0]" alt="">
+
+          <div class="info">
+            <h3>{{ product.name }}</h3>
+            <p class="price">₹ {{ getProductPrice(product) }}</p>
+            <p class="category">{{ product.category }}</p>
+          </div>
+
+          <div class="actions">
+            <button class="edit" (click)="editProduct(product)">Edit</button>
+            <button class="delete" (click)="openDeleteModal(product)">Delete</button>
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 🔥 DELETE MODAL -->
+@if (showDeleteModal) {
+
+  <div class="modal-overlay">
+
+    <div class="modal-box">
+
+      <h3>Delete Product</h3>
+
+      <p>
+        Are you sure you want to delete
+        <strong>{{ selectedProduct?.name }}</strong>?
+      </p>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+        <button class="delete-btn" (click)="confirmDelete()">Delete</button>
+      </div>
+
+    </div>
+
+  </div>
+
+}
+
+}

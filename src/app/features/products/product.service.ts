@@ -19,4 +19,12 @@ export class ProductService {
   getProductById(id: string): Observable<Product> {
   return this.http.get<Product>(`${this.API}/${id}`);
 }
+
+addReview(review: any) {
+  return this.http.post('http://localhost:8000/reviews', review);
+}
+
+getReviews(productId: string) {
+  return this.http.get<any[]>(`http://localhost:8000/reviews/${productId}`);
+}
 }

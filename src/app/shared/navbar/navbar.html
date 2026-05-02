@@ -6,43 +6,40 @@
     <span class="brand">The Wooden Castle</span>
   </div>
 
-  <!-- CENTER LINKS -->
-  <div class="links" [class.open]="menuOpen">
-
-   <a 
-  routerLink="/" 
-  routerLinkActive="active" 
-  [routerLinkActiveOptions]="{ exact: true }"
-  (click)="closeMenu()"
->
-  Home
-</a>
-
-<a 
-  routerLink="/products" 
-  routerLinkActive="active"
-  (click)="closeMenu()"
->
-  Products
-</a>
-    <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a>
-    <a routerLink="/contactus" routerLinkActive="active" (click)="closeMenu()">Contact</a>
-
+  <!-- DESKTOP LINKS -->
+  <div class="links desktop">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/products" routerLinkActive="active">Products</a>
+    <a routerLink="/about" routerLinkActive="active">About Us</a>
+    <a routerLink="/contactus" routerLinkActive="active">Contact</a>
   </div>
 
-  <!-- RIGHT -->
-  <div class="right">
-
-    <!-- OPTIONAL CTA -->
-    <!-- <button class="cta-btn">
-      Shop Now
-    </button> -->
-
-    <!-- MOBILE MENU BUTTON -->
-    <div class="menu-btn" (click)="toggleMenu()">
-      ☰
-    </div>
-
+  <!-- MENU BUTTON -->
+  <div class="menu-btn" (click)="toggleMenu()">
+    <span [class.open]="menuOpen"></span>
   </div>
 
 </nav>
+
+<!-- OVERLAY -->
+<div class="overlay" [class.show]="menuOpen" (click)="closeMenu()"></div>
+
+<!-- SIDE DRAWER -->
+<div class="drawer" [class.open]="menuOpen">
+
+ <div class="drawer-header">
+
+  <span class="menu-title">Menu</span>
+
+  <button class="close-btn" (click)="closeMenu()">
+    <span></span>
+  </button>
+
+</div>
+
+  <a routerLink="/" (click)="closeMenu()">Home</a>
+  <a routerLink="/products" (click)="closeMenu()">Products</a>
+  <a routerLink="/about" (click)="closeMenu()">About Us</a>
+  <a routerLink="/contactus" (click)="closeMenu()">Contact</a>
+
+</div>

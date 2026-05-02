@@ -1,3 +1,13 @@
+/* ================= BASE ================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
 /* ================= NAVBAR ================= */
 .navbar {
   position: sticky;
@@ -5,44 +15,41 @@
   z-index: 1000;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
-  padding: 14px 40px;
-  background: #ffffff;
+  padding: 12px 24px;
 
-  border-bottom: 1px solid #eee;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-/* ================= LEFT ================= */
+/* LEFT */
 .left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
 }
 
 .logo-img {
-  width: 199px;
-  height: 57px;
-  /* border-radius: 50%; */
-  object-fit: cover;
+  height: 38px;
 }
 
 .brand {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 18px;
   color: #6b4f3a;
-  letter-spacing: 0.5px;
 }
 
-/* ================= LINKS ================= */
+/* ================= DESKTOP LINKS ================= */
 .links {
+  flex: 1;                    /* take full space */
   display: flex;
-  align-items: center;
-  gap: 20px;
+  justify-content: center;    /* center horizontally */
+  gap: 28px;
 }
 
 .links a {
@@ -50,110 +57,217 @@
   color: #444;
   font-weight: 500;
   position: relative;
-  transition: 0.25s;
+  transition: 0.3s;
 }
 
-/* underline hover effect */
 .links a::after {
   content: '';
   position: absolute;
+  bottom: -6px;
   left: 0;
-  bottom: -4px;
   width: 0%;
   height: 2px;
   background: #6b4f3a;
   transition: 0.3s;
 }
 
-.links a:hover::after {
-  width: 100%;
-}
-
-.links a:hover {
-  color: #6b4f3a;
-}
-
-/* active route */
-.links a.active {
-  color: #6b4f3a;
-}
-
+.links a:hover::after,
 .links a.active::after {
   width: 100%;
 }
 
-/* ================= RIGHT ================= */
-.right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.links a:hover,
+.links a.active {
+  color: #6b4f3a;
 }
 
-/* CTA BUTTON */
-.cta-btn {
-  padding: 8px 16px;
-  background: #c49a6c;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 500;
+/* ================= MENU BUTTON ================= */
+.menu-btn {
+  display: none;
+  width: 30px;
+  height: 20px;
+  position: relative;
   cursor: pointer;
+  margin-left: auto;
+}
+
+.menu-btn span,
+.menu-btn span::before,
+.menu-btn span::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #333;
   transition: 0.3s;
 }
 
-.cta-btn:hover {
-  background: #a97c50;
+.menu-btn span {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-/* MENU BUTTON (hidden on desktop) */
-.menu-btn {
-  display: none;
-  font-size: 22px;
+.menu-btn span::before {
+  top: -8px;
+}
+
+.menu-btn span::after {
+  top: 8px;
+}
+
+/* ANIMATION TO X */
+.menu-btn span.open {
+  background: transparent;
+}
+
+.menu-btn span.open::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.menu-btn span.open::after {
+  transform: rotate(-45deg);
+  top: 0;
+}
+
+/* ================= OVERLAY ================= */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(3px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+
+  z-index: 999;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ================= DRAWER ================= */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -280px;
+
+  width: 260px;
+  height: 100%;
+
+  background: #fff;
+  box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+
+  display: flex;
+  flex-direction: column;
+
+  transition: right 0.35s ease;
+
+  z-index: 1001;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+/* ================= DRAWER HEADER ================= */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+/* ================= CLOSE BUTTON ================= */
+.close-btn {
+  width: 32px;
+  height: 32px;
+  position: relative;
+
+  border: none;
+  background: transparent;
   cursor: pointer;
+}
+
+/* X icon */
+.close-btn span,
+.close-btn span::before,
+.close-btn span::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: #333;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* rotate lines */
+.close-btn span::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-btn span::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* hover */
+.close-btn:hover span::before,
+.close-btn:hover span::after {
+  background: #6b4f3a;
+}
+
+/* ================= DRAWER LINKS ================= */
+.drawer a {
+  padding: 16px 20px;
+  text-decoration: none;
+  color: #333;
+  border-bottom: 1px solid #f2f2f2;
+  transition: 0.25s;
+  font-size: 15px;
+}
+
+.drawer a:hover {
+  background: #f8f8f8;
+  color: #6b4f3a;
 }
 
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
-  .navbar {
-    padding: 12px 20px;
-  }
-
-  /* hide links initially */
-  .links {
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-
-    flex-direction: column;
-    background: #fff;
-    padding: 15px 0;
-
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: 0.3s;
-  }
-
-  /* show menu */
-  .links.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .links a {
-    padding: 10px 0;
+  .links.desktop {
+    display: none;
   }
 
   .menu-btn {
     display: block;
   }
 
-  .cta-btn {
-    display: none; /* optional */
+  .navbar {
+    padding: 10px 16px;
+  }
+
+  .logo-img {
+    height: 34px;
+  }
+
+  .brand {
+    font-size: 16px;
   }
 }

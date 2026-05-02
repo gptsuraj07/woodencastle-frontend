@@ -1,11 +1,9 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../products/product.service';
 import { Product } from '../../../core/models/product.model';
 import { ProductCard } from '../../../shared/product-card/product-card';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
-
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -16,13 +14,8 @@ import { Router } from '@angular/router';
 })
 export class Home implements OnInit {
 
-  categoryKeys: string[] = [];
-    @Input() product!: Product;
-  groupedProducts: { [key: string]: Product[] } = {};
-  @Output() productClick = new EventEmitter<Product>();
   newArrivals: Product[] = [];
-  featuredProducts: Product[] = []; // renamed (no fake "best sellers")
-
+  featuredProducts: Product[] = [];
   loading = true;
 
   constructor(private productService: ProductService, private router: Router) {}
@@ -36,18 +29,8 @@ export class Home implements OnInit {
           return;
         }
 
-        // GROUP BY CATEGORY
-        this.groupedProducts = this.groupByCategory(products);
-        this.categoryKeys = Object.keys(this.groupedProducts);
-
-        // NEW ARRIVALS (latest inserted - safe fallback)
-        this.newArrivals = [...products]
-          .slice(-4)      // last 4 items
-          .reverse();     // newest first
-
-        // FEATURED PRODUCTS (stable fallback)
-        this.featuredProducts = [...products]
-          .slice(0, 4);   // first 4 items
+        this.newArrivals = [...products].slice(-4).reverse();
+        this.featuredProducts = [...products].slice(0, 4);
 
         this.loading = false;
       },
@@ -59,26 +42,12 @@ export class Home implements OnInit {
     });
   }
 
-  groupByCategory(products: Product[]) {
-    return products.reduce((acc: { [key: string]: Product[] }, product: Product) => {
-      if (!acc[product.category]) {
-        acc[product.category] = [];
-      }
-      acc[product.category].push(product);
-      return acc;
-    }, {});
-  }
-
   trackById(index: number, item: Product) {
     return item.id;
   }
 
-  handleClick(event: Event) {
-  event.preventDefault(); // stop default anchor behavior
-  this.productClick.emit(this.product);
-}
-
 goToProduct(product: Product) {
-  this.router.navigate(['/product', product.id]);
+  console.log("CLICK RECEIVED IN HOME:", product);
+  this.router.navigate(['/products', product.id]);
 }
 }

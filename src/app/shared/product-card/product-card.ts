@@ -24,6 +24,10 @@ handleClick(event: Event) {
   this.productClick.emit(this.product);
 }
 
+onClick() {
+  this.productClick.emit(this.product);
+}
+
 getOptimizedImage(url: string): string {
   return url; // fallback for now
 }

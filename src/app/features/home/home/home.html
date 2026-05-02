@@ -1,4 +1,4 @@
-<!-- HERO (SPLIT - HIGH CONVERSION) -->
+<!-- HERO -->
 <section class="hero-split">
 
   <div class="hero-left">
@@ -15,11 +15,6 @@
         Explore
       </button>
     </div>
-
-    <!-- <div class="hero-trust">
-      <span>✔ 500+ Happy Homes</span>
-      <span>✔ Premium Quality</span>
-    </div> -->
   </div>
 
   <div class="hero-right">
@@ -36,15 +31,13 @@
   </div>
 
   <div class="grid">
-  @for (product of newArrivals; track product.id) {
-    <div class="card-wrap">
+    <div class="card-wrap" *ngFor="let product of newArrivals; trackBy: trackById">
       <app-product-card 
         [product]="product"
         (productClick)="goToProduct($event)">
       </app-product-card>
     </div>
-  }
-</div>
+  </div>
 </section>
 
 <!-- FEATURED -->
@@ -53,16 +46,14 @@
     <h2>Featured Products</h2>
   </div>
 
- <div class="grid">
-  @for (product of featuredProducts; track product.id) {
-    <div class="card-wrap">
+  <div class="grid">
+    <div class="card-wrap" *ngFor="let product of featuredProducts; trackBy: trackById">
       <app-product-card 
         [product]="product"
         (productClick)="goToProduct($event)">
       </app-product-card>
     </div>
-  }
-</div>
+  </div>
 </section>
 
 <!-- WHY -->

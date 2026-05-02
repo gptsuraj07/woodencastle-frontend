@@ -1,74 +1,83 @@
-<div class="layout">
+<div class="page">
+
+  <!-- ================= MOBILE CATEGORY BAR ================= -->
+  <div class="mobile-category-bar">
+    @for (cat of categories; track cat) {
+      <div 
+        class="mobile-category-item"
+        [class.active]="cat === selectedCategory"
+        (click)="selectCategory(cat)"
+      >
+        <span>{{ cat }}</span>
+<small>({{ groupedProducts[cat]?.length || 0 }})</small>      </div>
+    }
+  </div>
 
   <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
 
-    <h3>Categories</h3>
+    <h3 class="sidebar-title">Categories</h3>
 
-    @for (cat of categories; track cat) {
-      <div class="category-block">
+    <div class="category-list">
+      @for (cat of categories; track cat) {
+        <div class="category-item">
 
-        <!-- CATEGORY TITLE -->
-        <div 
-          class="category-title"
-          [class.active]="cat === selectedCategory"
-          (click)="selectCategory(cat); toggleCategory(cat)"
-        >
-          <span>{{ cat }}</span>
-<small>({{ groupedProducts[cat]?.length }})</small>
-        </div>
-
-        <!-- SUBCATEGORY PREVIEW -->
-        @if (expandedCategory === cat) {
-          <div class="subcategory">
-
-           @for (
-  p of (
-    expandedFullCategory === cat
-      ? groupedProducts[cat]
-      : groupedProducts[cat].slice(0, 4)
-  );
-  track p.id
-) {
-              <a 
-                class="sub-item"
-                [routerLink]="['/products', p.id]"
-              >
-                {{ p.name }}
-              </a>
-            }
-
-            <!-- VIEW ALL -->
-           <div style="cursor: pointer;" class="view-all" (click)="toggleViewAll(cat)">
-  {{ expandedFullCategory === cat ? 'Show less ↑' : 'View all →' }}
-</div>
-
+          <div 
+            class="category-header"
+            [class.active]="cat === selectedCategory"
+            (click)="selectCategory(cat); toggleCategory(cat)"
+          >
+            <span>{{ cat }}</span>
+            <small>({{ groupedProducts[cat]?.length }})</small>
           </div>
-        }
 
-      </div>
-    }
+          @if (expandedCategory === cat) {
+            <div class="subcategory">
+
+              @for (
+                p of (
+                  expandedFullCategory === cat
+                    ? groupedProducts[cat]
+                    : groupedProducts[cat].slice(0, 4)
+                );
+                track p.id
+              ) {
+                <a 
+                  class="sub-item"
+                  [routerLink]="['/products', p.id]"
+                >
+                  {{ p.name }}
+                </a>
+              }
+
+              <div 
+                class="view-all"
+                (click)="toggleViewAll(cat)"
+              >
+                {{ expandedFullCategory === cat ? 'Show less ↑' : 'View all →' }}
+              </div>
+
+            </div>
+          }
+
+        </div>
+      }
+    </div>
 
   </aside>
 
   <!-- ================= CONTENT ================= -->
-  <section class="content">
+  <main class="content">
 
-    <!-- HEADER -->
     <div class="content-header">
 
-      <!-- LEFT -->
       <div class="title-block">
-        <h2>{{ selectedCategory }}</h2>
-        <p class="count">
-          {{ filteredProducts.length }} products
-        </p>
+        <h2>{{ searchText ? 'Search Results' : selectedCategory }}</h2>
+        <p class="count">{{ filteredProducts.length }} products</p>
       </div>
 
-      <!-- RIGHT CONTROLS -->
       <div class="controls">
 
-        <!-- SEARCH -->
         <div class="search-box">
           <input 
             type="text"
@@ -76,25 +85,21 @@
             [(ngModel)]="searchText"
             (input)="applyFilters()"
           />
-
           @if (searchText) {
             <span 
               class="clear-btn"
               (click)="searchText=''; applyFilters()"
-            >
-              ✕
-            </span>
+            >✕</span>
           }
         </div>
 
-        <!-- SORT -->
         <select 
           [(ngModel)]="sortOption"
           (change)="applyFilters()"
         >
           <option value="default">Sort</option>
-          <option value="name-asc">Name A → Z</option>
-          <option value="name-desc">Name Z → A</option>
+          <option value="name-asc">A → Z</option>
+          <option value="name-desc">Z → A</option>
         </select>
 
       </div>
@@ -107,22 +112,22 @@
       @if (filteredProducts.length === 0) {
         <div class="empty-state">
           <h3>No products found</h3>
-          <p>Try changing your search or category</p>
+          <p>Try different keywords</p>
         </div>
       }
 
-     @for (product of filteredProducts; track product.id; let i = $index) {
-  <div [id]="'product-' + product.id">
-    <app-product-card 
-      [product]="product"
-      [priority]="i < 4"
-      (productClick)="selectProduct(product)">
-    </app-product-card>
-  </div>
-}
+      @for (product of filteredProducts; track product.id; let i = $index) {
+        <div class="product-wrapper" [id]="'product-' + product.id">
+          <app-product-card 
+            [product]="product"
+            [priority]="i < 4"
+            (productClick)="selectProduct(product)">
+          </app-product-card>
+        </div>
+      }
 
     </div>
 
-  </section>
+  </main>
 
 </div>

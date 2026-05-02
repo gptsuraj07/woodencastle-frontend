@@ -62,6 +62,7 @@ body {
   border-radius: 8px;
   border: none;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .primary-btn:hover {

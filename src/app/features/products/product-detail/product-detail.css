@@ -101,6 +101,7 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
+  width: 100%;
 }
 
 .cta-sub {
@@ -233,6 +234,7 @@ textarea:focus {
   font-size: 15px;
   cursor: pointer;
   transition: 0.3s;
+  width: 100%;
 }
 
 .submit-btn:hover {

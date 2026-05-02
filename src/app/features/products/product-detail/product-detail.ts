@@ -5,11 +5,14 @@ import { Product, Variant } from '../../../core/models/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+
 interface Review {
+  product_id?: string;   // optional for form usage
   name: string;
   rating: number;
   comment: string;
   images: string[];
+  created_at?: string;   // comes from backend
 }
 
 @Component({

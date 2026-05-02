@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { Product } from '../../core/models/product.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment.prod';
+import { Review } from '../../core/models/review.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private API = 'http://127.0.0.1:8000/products';
-
+private API = `${environment.apiUrl}/products`;
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<Product[]> {
@@ -21,10 +22,10 @@ export class ProductService {
 }
 
 addReview(review: any) {
-  return this.http.post('http://localhost:8000/reviews', review);
+  return this.http.post(`${environment.apiUrl}/reviews`, review);
 }
 
 getReviews(productId: string) {
-  return this.http.get<any[]>(`http://localhost:8000/reviews/${productId}`);
+  return this.http.get<Review[]>(`${environment.apiUrl}/reviews/${productId}`);
 }
 }

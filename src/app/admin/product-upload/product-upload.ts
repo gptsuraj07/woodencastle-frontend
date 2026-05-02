@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-product-upload',
@@ -48,7 +49,7 @@ selectedProduct: any = null;
     formData.append('username', this.username);
     formData.append('password', this.password);
 
-    fetch('http://localhost:8000/admin/login', {
+    fetch(`${environment.apiUrl}/products`, {
       method: 'POST',
       body: formData
     })
@@ -73,7 +74,7 @@ selectedProduct: any = null;
 
   // FETCH PRODUCTS
   fetchProducts() {
-    fetch('http://localhost:8000/products')
+    fetch(`${environment.apiUrl}/products`)
       .then(res => res.json())
       .then(data => this.products = data);
   }
@@ -104,9 +105,9 @@ onFileChange(event: Event) {
       this.files.forEach(file => formData.append('files', file));
     }
 
-    const url = this.editMode
-      ? `http://localhost:8000/admin/update-product/${this.editingId}`
-      : `http://localhost:8000/admin/castle-products`;
+ const url = this.editMode
+  ? `${environment.apiUrl}/admin/update-product/${this.editingId}`
+  : `${environment.apiUrl}/admin/castle-products`;
 
     const method = this.editMode ? 'PUT' : 'POST';
 
@@ -125,7 +126,7 @@ onFileChange(event: Event) {
 
   // DELETE
   deleteProduct(id: string) {
-    fetch(`http://localhost:8000/admin/delete-product/${id}`, {
+    fetch(`${environment.apiUrl}/admin/delete-product/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${this.token}`

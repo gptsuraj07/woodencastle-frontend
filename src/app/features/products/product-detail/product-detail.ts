@@ -94,7 +94,7 @@ hoverRating = 0;
   }
 
   openWhatsApp() {
-    const phone = '919710759208';
+    const phone = '919597718532';
     const price = this.getPrice();
 
     let message = `Hello,\n\nI'm interested in:\n${this.product.name}\nPrice: ₹${price}`;

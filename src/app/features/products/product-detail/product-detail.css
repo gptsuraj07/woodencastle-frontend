@@ -325,4 +325,12 @@ textarea:focus {
     padding: 10px 20px;
     border-radius: 8px;
   }
+
+  .form-row{
+    width: 90%;
+  }
+
+  .textarea{
+    width: 90%
+  }
 }

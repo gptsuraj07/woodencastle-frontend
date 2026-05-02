@@ -19,11 +19,16 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+  {
+    "glob": "**/*",
+    "input": "public"
+  },
+  {
+    "glob": "_redirects",
+    "input": "src",
+    "output": "/browser"
+  }
+],
             "styles": [
               "src/styles.css"
             ]

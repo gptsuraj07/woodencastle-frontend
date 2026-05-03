@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment.prod';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-upload',
@@ -11,6 +12,8 @@ import { environment } from '../../../environments/environment.prod';
   styleUrl: './product-upload.css',
 })
 export class ProductUpload implements OnInit {
+
+  constructor(private http: HttpClient) {}
 
   name = '';
   category = '';
@@ -33,38 +36,34 @@ selectedProduct: any = null;
   editMode = false;
   editingId: string | null = null;
 
-  ngOnInit() {
-    const savedToken = localStorage.getItem('token');
+ngOnInit() {
+  const savedToken = localStorage.getItem('token');
 
-    if (savedToken) {
-      this.token = savedToken;
-      this.isAuthenticated = true;
-      this.fetchProducts();
-    }
+  if (savedToken) {
+    this.token = savedToken;
+    this.isAuthenticated = true;
+    this.fetchProducts();
   }
+}
 
   // LOGIN
-  login() {
-    const formData = new FormData();
-    formData.append('username', this.username);
-    formData.append('password', this.password);
+login() {
+  const formData = new FormData();
+  formData.append('username', this.username);
+  formData.append('password', this.password);
 
-    fetch(`${environment.apiUrl}/products`, {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => {
-      if (!res.ok) throw new Error();
-      return res.json();
-    })
-    .then(data => {
-      this.token = data.access_token;
-      localStorage.setItem('token', this.token);
+  this.http.post('https://api.thewoodencastle.com/admin/login', formData)
+    .subscribe((res: any) => {
+
+      console.log("LOGIN RESPONSE:", res);
+
+      localStorage.setItem('token', res.access_token);
       this.isAuthenticated = true;
-      this.fetchProducts();
-    })
-    .catch(() => alert('Login failed'));
-  }
+
+    }, err => {
+      console.error("LOGIN ERROR:", err);
+    });
+}
 
   logout() {
     localStorage.removeItem('token');
@@ -73,11 +72,26 @@ selectedProduct: any = null;
   }
 
   // FETCH PRODUCTS
-  fetchProducts() {
-    fetch(`${environment.apiUrl}/products`)
-      .then(res => res.json())
-      .then(data => this.products = data);
-  }
+ fetchProducts() {
+  const token = this.token;
+
+  this.http.get(`${environment.apiUrl}/products`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).subscribe({
+    next: (data: any) => {
+      this.products = data;
+    },
+    error: (err) => {
+      console.error("FETCH PRODUCTS ERROR:", err);
+
+      if (err.status === 401) {
+        this.logout();
+      }
+    }
+  });
+}
 
   // FILE
 onFileChange(event: Event) {

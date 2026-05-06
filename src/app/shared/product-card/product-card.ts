@@ -31,4 +31,14 @@ onClick() {
 getOptimizedImage(url: string): string {
   return url; // fallback for now
 }
+
+getStartingPrice(product: any): number {
+  if (!product.variants || product.variants.length === 0) {
+    return product.price || 0;
+  }
+
+  return Math.min(
+    ...product.variants.map((v: any) => v.price || 0)
+  );
+}
 }

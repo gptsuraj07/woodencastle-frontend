@@ -15,21 +15,34 @@
     </div> -->
   </div>
 
-  <div class="content">
-    <h3>{{ product.name }}</h3>
+<div class="content">
 
-    <!-- variants preview -->
-    @if (product.variants && product.variants.length > 0) {
-  <div class="variants">
-    @for (v of product.variants; track v) {
-      <span>{{v.type }}</span>
-    }
-  </div>
-}
+  <!-- TITLE -->
+  <h3>{{ product.name }}</h3>
 
-<a class="view-btn" (click)="handleClick($event)">
-  View Details →
-</a>
+  <!-- PRICE -->
+  <div class="price-box">
+    <div class="price">
+      ₹ {{ getStartingPrice(product) }}
+    </div>
+
+
   </div>
+
+  <!-- VARIANTS -->
+  @if (product.variants && product.variants.length > 0) {
+    <div class="variants">
+      @for (v of product.variants; track v) {
+        <span>{{ v.type }}</span>
+      }
+    </div>
+  }
+
+  <!-- BUTTON -->
+  <a class="view-btn" (click)="handleClick($event)">
+    View Details →
+  </a>
+
+</div>
 
 </div>

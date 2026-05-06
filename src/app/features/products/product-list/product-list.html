@@ -2,66 +2,149 @@
 
   <!-- ================= MOBILE CATEGORY BAR ================= -->
   <div class="mobile-category-bar">
+
     @for (cat of categories; track cat) {
-      <div 
+
+      <div
         class="mobile-category-item"
         [class.active]="cat === selectedCategory"
         (click)="selectCategory(cat)"
       >
-        <span>{{ cat }}</span>
-<small>({{ groupedProducts[cat]?.length || 0 }})</small>      </div>
+
+        <span>
+          {{ formatLabel(cat) }}
+        </span>
+
+      </div>
+
     }
+
   </div>
 
   <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
 
-    <h3 class="sidebar-title">Categories</h3>
+    <h3 class="sidebar-title">
+      Categories
+    </h3>
 
     <div class="category-list">
-      @for (cat of categories; track cat) {
-        <div class="category-item">
 
-          <div 
+      @for (cat of categories; track cat) {
+
+        <div class="category-item" [class.active-mobile-category]="cat === selectedCategory">
+
+          <!-- ================= PARENT CATEGORY ================= -->
+          <div
             class="category-header"
             [class.active]="cat === selectedCategory"
-            (click)="selectCategory(cat); toggleCategory(cat)"
+            (click)="selectCategory(cat)"
           >
-            <span>{{ cat }}</span>
-            <small>({{ groupedProducts[cat]?.length }})</small>
+
+            <span>
+              {{ formatLabel(cat) }}
+            </span>
+
           </div>
 
-          @if (expandedCategory === cat) {
+          <!-- ================= SUBCATEGORY SECTION ================= -->
+          @if (expandedCategory === cat ||   selectedCategory === cat) {
+
             <div class="subcategory">
 
               @for (
-                p of (
-                  expandedFullCategory === cat
-                    ? groupedProducts[cat]
-                    : groupedProducts[cat].slice(0, 4)
-                );
-                track p.id
+                sub of objectKeys(categoryTree[cat]);
+                track sub
               ) {
-                <a 
-                  class="sub-item"
-                  [routerLink]="['/products', p.id]"
-                >
-                  {{ p.name }}
-                </a>
+
+                <!-- ================= DIRECT PRODUCTS ================= -->
+                @if (sub === cat) {
+
+                  <div class="product-links direct-products">
+
+                    @for (
+                      p of categoryTree[cat][sub];
+                      track p.id
+                    ) {
+
+                      <a
+                        class="product-link"
+                        [routerLink]="['/products', p.id]"
+                      >
+
+                        {{ p.name }}
+
+                      </a>
+
+                    }
+
+                  </div>
+
+                }
+
+                <!-- ================= NORMAL SUBCATEGORY ================= -->
+                @else {
+
+                  <div class="sub-wrapper">
+
+                    <!-- SUBCATEGORY -->
+                    <div
+                      class="sub-item"
+                      [class.active-sub]="selectedSubCategory === sub"
+                      (click)="selectSubCategory(sub)"
+                    >
+
+                      <span>
+                        {{ formatLabel(sub) }}
+                      </span>
+
+                      <small>
+                        (
+                        {{ categoryTree[cat][sub].length }}
+                        )
+                      </small>
+
+                    </div>
+
+                    <!-- PRODUCTS UNDER SUBCATEGORY -->
+                    @if (expandedSubCategory === sub) {
+
+                      <div class="product-links">
+
+                        @for (
+                          p of categoryTree[cat][sub];
+                          track p.id
+                        ) {
+
+                          <a
+                            class="product-link"
+                            [routerLink]="['/products', p.id]"
+                          >
+
+                            {{ p.name }}
+
+                          </a>
+
+                        }
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                }
+
               }
 
-              <div 
-                class="view-all"
-                (click)="toggleViewAll(cat)"
-              >
-                {{ expandedFullCategory === cat ? 'Show less ↑' : 'View all →' }}
-              </div>
-
             </div>
+
           }
 
         </div>
+
       }
+
     </div>
 
   </aside>
@@ -72,58 +155,115 @@
     <div class="content-header">
 
       <div class="title-block">
-        <h2>{{ searchText ? 'Search Results' : selectedCategory }}</h2>
-        <p class="count">{{ filteredProducts.length }} products</p>
+
+        <h2>
+
+          {{
+            searchText
+              ? 'Search Results'
+              : formatLabel(selectedSubCategory)
+          }}
+
+        </h2>
+
+        <p class="count">
+
+          {{ filteredProducts.length }}
+          products
+
+        </p>
+
       </div>
 
+      <!-- ================= CONTROLS ================= -->
       <div class="controls">
 
+        <!-- SEARCH -->
         <div class="search-box">
-          <input 
+
+          <input
             type="text"
             placeholder="Search products..."
             [(ngModel)]="searchText"
             (input)="applyFilters()"
           />
+
           @if (searchText) {
-            <span 
+
+            <span
               class="clear-btn"
               (click)="searchText=''; applyFilters()"
-            >✕</span>
+            >
+              ✕
+            </span>
+
           }
+
         </div>
 
-        <select 
+        <!-- SORT -->
+        <select
           [(ngModel)]="sortOption"
           (change)="applyFilters()"
         >
-          <option value="default">Sort</option>
-          <option value="name-asc">A → Z</option>
-          <option value="name-desc">Z → A</option>
+
+          <option value="default">
+            Sort
+          </option>
+
+          <option value="name-asc">
+            A → Z
+          </option>
+
+          <option value="name-desc">
+            Z → A
+          </option>
+
         </select>
 
       </div>
 
     </div>
 
-    <!-- GRID -->
+    <!-- ================= PRODUCT GRID ================= -->
     <div class="grid">
 
       @if (filteredProducts.length === 0) {
+
         <div class="empty-state">
-          <h3>No products found</h3>
-          <p>Try different keywords</p>
+
+          <h3>
+            No products found
+          </h3>
+
+          <p>
+            Try different keywords
+          </p>
+
         </div>
+
       }
 
-      @for (product of filteredProducts; track product.id; let i = $index) {
-        <div class="product-wrapper" [id]="'product-' + product.id">
-          <app-product-card 
+      @for (
+        product of filteredProducts;
+        track product.id;
+        let i = $index
+      ) {
+
+        <div
+          class="product-wrapper"
+          [id]="'product-' + product.id"
+        >
+
+          <app-product-card
             [product]="product"
             [priority]="i < 4"
-            (productClick)="selectProduct(product)">
+            (productClick)="selectProduct(product)"
+          >
           </app-product-card>
+
         </div>
+
       }
 
     </div>

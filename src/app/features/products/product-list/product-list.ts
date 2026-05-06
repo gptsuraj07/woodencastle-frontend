@@ -3,7 +3,7 @@ import { ProductService } from '../product.service';
 import { Product } from '../../../core/models/product.model';
 import { CommonModule } from '@angular/common';
 import { ProductCard } from '../../../shared/product-card/product-card';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -17,136 +17,271 @@ import { RouterModule } from '@angular/router';
 export class ProductList implements OnInit {
 
   products: Product[] = [];
-  groupedProducts: { [key: string]: Product[] } = {};
+  expandedSubCategory: string | null = null;
+  categoryTree: any = {};
+
   categories: string[] = [];
 
   selectedCategory: string = '';
+  selectedSubCategory: string = '';
 
   expandedCategory: string | null = null;
-  expandedFullCategory: string | null = null;
 
   searchText: string = '';
   sortOption: string = 'default';
 
   filteredProducts: Product[] = [];
 
+  objectKeys = Object.keys;
+
   constructor(
     private productService: ProductService,
-    private router: Router,
-    private route : ActivatedRoute
+    private router: Router
   ) {}
 
+  ngOnInit() {
 
-ngOnInit() {
-  this.productService.getProducts().subscribe({
-    next: (products) => {
-      this.products = products;
+    this.productService.getProducts().subscribe({
 
-      this.groupedProducts = this.groupByCategory(products);
-      this.categories = Object.keys(this.groupedProducts);
+      next: (products) => {
 
-      // ✅ 1. Restore category FIRST
-      const savedCategory = sessionStorage.getItem('category');
+        this.products = products;
 
-      if (savedCategory && this.categories.includes(savedCategory)) {
-        this.selectedCategory = savedCategory;
-      } else {
-        this.selectedCategory = this.categories[0];
+        // BUILD TREE
+        this.categoryTree = this.buildCategoryTree(products);
+
+        this.categories = Object.keys(this.categoryTree);
+
+        // DEFAULT CATEGORY
+        const savedCategory =
+          sessionStorage.getItem('category');
+
+        if (
+          savedCategory &&
+          this.categories.includes(savedCategory)
+        ) {
+
+          this.selectedCategory = savedCategory;
+
+        } else {
+
+          this.selectedCategory = this.categories[0];
+
+        }
+
+        // DEFAULT SUBCATEGORY
+        const firstSubCategory = Object.keys(
+          this.categoryTree[this.selectedCategory]
+        )[0];
+
+        this.selectedSubCategory = firstSubCategory;
+
+        // SIDEBAR
+        this.expandedCategory = this.selectedCategory;
+
+        // FILTER
+        this.applyFilters();
+
+        // SCROLL RESTORE
+        const lastId =
+          sessionStorage.getItem('lastProductId');
+
+        if (lastId) {
+
+          setTimeout(() => {
+
+            const el = document.getElementById(
+              'product-' + lastId
+            );
+
+            if (el) {
+
+              const y =
+                el.getBoundingClientRect().top +
+                window.scrollY -
+                100;
+
+              window.scrollTo({
+                top: y,
+                behavior: 'smooth'
+              });
+
+            }
+
+          }, 300);
+
+        }
+
       }
 
-      // ✅ 2. Sync sidebar
-      this.expandedCategory = this.selectedCategory;
-      this.expandedFullCategory = this.selectedCategory;
+    });
 
-      // ✅ 3. Apply filters
-      this.applyFilters();
+  }
 
-      // ✅ 4. Restore scroll AFTER DOM + images
-// ✅ 4. Scroll to last clicked product (NOT pixel)
-const lastId = sessionStorage.getItem('lastProductId');
+  // =========================
+  // CATEGORY TREE
+  // =========================
+  buildCategoryTree(products: Product[]) {
 
-if (lastId) {
-  setTimeout(() => {
-    const el = document.getElementById('product-' + lastId);
+    const tree: any = {};
 
-    if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+    products.forEach((product: any) => {
 
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth'
-      });
-    }
-  }, 300);
-}
-    }
-  });
-}
+      const parent =
+        product.parentCategory ||
+        product.category;
 
+      const sub =
+        product.subCategory ||
+        product.category;
 
-  groupByCategory(products: Product[]) {
-    return products.reduce((acc: any, product: Product) => {
-      if (!acc[product.category]) {
-        acc[product.category] = [];
+      if (!tree[parent]) {
+        tree[parent] = {};
       }
-      acc[product.category].push(product);
-      return acc;
-    }, {});
+
+      if (!tree[parent][sub]) {
+        tree[parent][sub] = [];
+      }
+
+      tree[parent][sub].push(product);
+
+    });
+
+    return tree;
+
   }
 
+  // =========================
+  // CATEGORY SELECT
+  // =========================
+selectCategory(cat: string) {
 
+  this.selectedCategory = cat;
 
+  // ALWAYS EXPAND SELECTED CATEGORY
+  this.expandedCategory = cat;
 
+  // AUTO SELECT FIRST SUBCATEGORY
+  const firstSubCategory = Object.keys(
+    this.categoryTree[cat]
+  )[0];
 
-  toggleCategory(cat: string) {
-    this.expandedCategory =
-      this.expandedCategory === cat ? null : cat;
+  this.selectedSubCategory = firstSubCategory;
 
-    if (this.expandedCategory !== cat) {
-      this.expandedFullCategory = null;
-    }
-  }
+  this.applyFilters();
 
-  toggleViewAll(cat: string) {
-    this.expandedFullCategory =
-      this.expandedFullCategory === cat ? null : cat;
-  }
-
-  selectCategory(cat: string) {
-    this.selectedCategory = cat;
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    if (!this.selectedCategory) return;
-
-    let products = this.groupedProducts[this.selectedCategory] || [];
-
-    if (this.searchText) {
-      products = products.filter(p =>
-        p.name.toLowerCase().includes(this.searchText.toLowerCase())
-      );
-    }
-
-    if (this.sortOption === 'name-asc') {
-      products = [...products].sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-    }
-
-    if (this.sortOption === 'name-desc') {
-      products = [...products].sort((a, b) =>
-        b.name.localeCompare(a.name)
-      );
-    }
-
-    this.filteredProducts = products;
-  }
-
-selectProduct(product: Product) {
-  sessionStorage.setItem('lastProductId', product.id);
-  sessionStorage.setItem('category', this.selectedCategory);
-
-  this.router.navigate(['/products', product.id]);
 }
+
+  // =========================
+  // SUBCATEGORY SELECT
+  // =========================
+selectSubCategory(sub: string) {
+
+  this.selectedSubCategory = sub;
+
+  // TOGGLE PRODUCT LIST
+  this.expandedSubCategory =
+    this.expandedSubCategory === sub
+      ? null
+      : sub;
+
+  this.applyFilters();
+
+}
+
+  // =========================
+  // FILTERS
+  // =========================
+applyFilters() {
+
+  if (
+    !this.selectedCategory ||
+    !this.selectedSubCategory
+  ) {
+    return;
+  }
+
+  // GET PRODUCTS FROM SUBCATEGORY
+  let products =
+    this.categoryTree?.[
+      this.selectedCategory
+    ]?.[
+      this.selectedSubCategory
+    ] || [];
+
+  // SEARCH
+  if (this.searchText) {
+
+    products = products.filter((p: any) =>
+      p.name
+        .toLowerCase()
+        .includes(
+          this.searchText.toLowerCase()
+        )
+    );
+
+  }
+
+  // SORT ASC
+  if (this.sortOption === 'name-asc') {
+
+    products = [...products].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
+  }
+
+  // SORT DESC
+  if (this.sortOption === 'name-desc') {
+
+    products = [...products].sort((a, b) =>
+      b.name.localeCompare(a.name)
+    );
+
+  }
+
+  this.filteredProducts = products;
+
+}
+
+  // =========================
+  // SIDEBAR TOGGLE
+  // =========================
+
+
+  // =========================
+  // FORMAT LABEL
+  // =========================
+  formatLabel(label: string): string {
+
+    return label
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, c =>
+        c.toUpperCase()
+      );
+
+  }
+
+  // =========================
+  // PRODUCT CLICK
+  // =========================
+  selectProduct(product: Product) {
+
+    sessionStorage.setItem(
+      'lastProductId',
+      product.id
+    );
+
+    sessionStorage.setItem(
+      'category',
+      this.selectedCategory
+    );
+
+    this.router.navigate([
+      '/products',
+      product.id
+    ]);
+
+  }
+
 }

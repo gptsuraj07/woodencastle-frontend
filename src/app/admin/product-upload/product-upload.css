@@ -251,6 +251,65 @@
   background: #e60000;
 }
 
+
+
+
+
+.admin-guide {
+  margin-top: 20px;
+}
+
+.guide-box {
+  background: #faf7f2;
+
+  border: 1px solid #e7ddd2;
+
+  border-radius: 14px;
+
+  padding: 18px;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+.guide-box h5 {
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+.guide-box code {
+  background: #eee;
+
+  padding: 2px 6px;
+
+  border-radius: 4px;
+
+  font-size: 12px;
+}
+
+.guide-box pre {
+  background: #fff;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  overflow-x: auto;
+
+  font-size: 12px;
+
+  border: 1px solid #eee;
+}
+
+.guide-box ul {
+  padding-left: 18px;
+}
+
+.guide-box li {
+  margin-bottom: 6px;
+}
+
 /* =========================
    SCROLLBAR (premium feel)
 ========================= */

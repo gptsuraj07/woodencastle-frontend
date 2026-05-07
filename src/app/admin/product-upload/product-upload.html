@@ -33,9 +33,116 @@
       <h4>Basic Info</h4>
 
       <input [(ngModel)]="name" placeholder="Product Name">
-      <input [(ngModel)]="category" placeholder="Category">
+      <input
+  [(ngModel)]="parentCategory"
+  placeholder="Parent Category (example: chopping-boards)"
+>
+
+<input
+  [(ngModel)]="subCategory"
+  placeholder="Sub Category (example: walnut-chopping-boards)"
+>
       <textarea [(ngModel)]="description" placeholder="Description"></textarea>
     </div>
+
+    <div class="admin-guide">
+
+  <h4>How Categories Work</h4>
+
+  <div class="guide-box">
+
+    <p>
+      <strong>Parent Category</strong><br>
+      Main category shown in sidebar.<br>
+
+      Example:
+      <code>chopping-boards</code>
+    </p>
+
+    <p>
+      <strong>Sub Category</strong><br>
+      Category inside the parent category.<br>
+
+      Example:
+      <code>walnut-chopping-boards</code><br>
+      <code>teak-wooden-boards</code>
+    </p>
+
+    <p>
+      <strong>Important:</strong><br>
+
+      Products with SAME parent category
+      will come under one common section.
+
+      Subcategory separates them inside.
+    </p>
+
+    <hr>
+
+    <h5>Example Structure</h5>
+
+    <pre>
+Chopping Boards
+ ├── Walnut Chopping Boards
+ │     ├── Tilted Neck
+ │     ├── Rustic Edge
+ │
+ └── Teak Wooden Boards
+       ├── Classic Teak
+       ├── Chef Board
+    </pre>
+
+    <hr>
+
+    <h5>Adding Product</h5>
+
+    <ul>
+      <li>
+        Add Parent Category first
+      </li>
+
+      <li>
+        Add matching Sub Category
+      </li>
+
+      <li>
+        Upload max 4 images
+      </li>
+
+      <li>
+        Add at least one variant with price
+      </li>
+    </ul>
+
+    <hr>
+
+    <h5>Editing Product</h5>
+
+    <ul>
+      <li>
+        Click product card on right side
+      </li>
+
+      <li>
+        Existing images appear automatically
+      </li>
+
+      <li>
+        Remove old images using ✕
+      </li>
+
+      <li>
+        Add new images if needed
+      </li>
+
+      <li>
+        Click Update Product
+      </li>
+    </ul>
+
+  </div>
+
+</div>
 
     <!-- VARIANTS -->
     <div class="card">

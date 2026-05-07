@@ -16,7 +16,7 @@ export class ProductUpload implements OnInit {
   constructor(private http: HttpClient) {}
 
   name = '';
-  category = '';
+  // category = '';
   description = '';
   files: File[] = [];
   showDeleteModal = false;
@@ -25,6 +25,8 @@ selectedProduct: any = null;
   token: string = '';
   username = '';
   password = '';
+  parentCategory = '';
+subCategory = '';
   existingImages: string[] = [];
 
   products: any[] = [];
@@ -57,8 +59,18 @@ login() {
 
       console.log("LOGIN RESPONSE:", res);
 
-      localStorage.setItem('token', res.access_token);
-      this.isAuthenticated = true;
+localStorage.setItem(
+  'token',
+  res.access_token
+);
+
+// IMPORTANT
+this.token = res.access_token;
+
+this.isAuthenticated = true;
+
+// refresh products
+this.fetchProducts();
 
     }, err => {
       console.error("LOGIN ERROR:", err);
@@ -105,38 +117,83 @@ onFileChange(event: Event) {
   input.value = ''; // 🔥 important
 }
   // SUBMIT
-  submitForm() {
+// SUBMIT
+submitForm() {
 
-    const formData = new FormData();
+  const formData = new FormData();
 
-    formData.append('name', this.name);
-    formData.append('category', this.category);
-    formData.append('description', this.description);
-    formData.append('variants', JSON.stringify(this.variants));
-    formData.append('existing_images', JSON.stringify(this.existingImages));
+  formData.append('name', this.name);
 
-    if (this.files.length > 0) {
-      this.files.forEach(file => formData.append('files', file));
-    }
+  // NEW CATEGORY STRUCTURE
+  formData.append(
+    'parentCategory',
+    this.parentCategory
+  );
 
- const url = this.editMode
-  ? `${environment.apiUrl}/admin/update-product/${this.editingId}`
-  : `${environment.apiUrl}/admin/castle-products`;
+// OPTIONAL SUBCATEGORY
+formData.append(
+  'subCategory',
+  this.subCategory || ''
+);
 
-    const method = this.editMode ? 'PUT' : 'POST';
+// category fallback
+formData.append(
+  'category',
+  this.subCategory
+    ? this.subCategory
+    : this.parentCategory
+);
 
-    fetch(url, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      body: formData
-    })
-    .then(() => {
-      this.resetForm();
-      this.fetchProducts();
-    });
+  formData.append(
+    'description',
+    this.description
+  );
+
+  formData.append(
+    'variants',
+    JSON.stringify(this.variants)
+  );
+
+  formData.append(
+    'existing_images',
+    JSON.stringify(this.existingImages)
+  );
+
+  // FILES
+  if (this.files.length > 0) {
+
+    this.files.forEach(file =>
+      formData.append('files', file)
+    );
+
   }
+
+  const url = this.editMode
+    ? `${environment.apiUrl}/admin/update-product/${this.editingId}`
+    : `${environment.apiUrl}/admin/castle-products`;
+
+  const method =
+    this.editMode ? 'PUT' : 'POST';
+
+  fetch(url, {
+    method: method,
+
+    headers: {
+      Authorization:
+        `Bearer ${localStorage.getItem('token')}`
+    },
+
+    body: formData
+  })
+  .then(() => {
+
+    this.resetForm();
+
+    this.fetchProducts();
+
+  });
+
+}
 
   // DELETE
   deleteProduct(id: string) {
@@ -151,41 +208,88 @@ onFileChange(event: Event) {
 
 
   // EDIT
+// EDIT
 editProduct(product: any) {
 
   this.name = product.name;
-  this.category = product.category;
-  this.description = product.description;
 
-  // variants (already correct)
+  // NEW CATEGORY STRUCTURE
+// PARENT CATEGORY REQUIRED
+this.parentCategory =
+  product.parentCategory ||
+  product.category ||
+  '';
+
+// SUB CATEGORY OPTIONAL
+this.subCategory =
+  product.subCategory || '';
+
+  this.description =
+    product.description;
+
+  // VARIANTS
   if (product.variants?.length) {
-    this.variants = product.variants.map((v: any) => ({
-      label: v.label || v.type || 'Default',
-      price: v.price,
-      dimensions: v.dimensions || ''
-    }));
+
+    this.variants =
+      product.variants.map((v: any) => ({
+
+        label:
+          v.label ||
+          v.type ||
+          'Default',
+
+        price: v.price,
+
+        dimensions:
+          v.dimensions || ''
+
+      }));
+
   }
 
-  // 🔥 THIS IS WHAT YOU MISSED
-  this.existingImages = [...(product.images || [])];
+  // EXISTING IMAGES
+  this.existingImages = [
+    ...(product.images || [])
+  ];
 
-  // reset new uploads
+  // RESET NEW FILES
   this.files = [];
 
   this.editMode = true;
+
   this.editingId = product.id;
+
 }
 
   // RESET
-  resetForm() {
-    this.name = '';
-    this.category = '';
-    this.description = '';
-    this.files = [];
-    this.variants = [{ label: 'Standard', price: 0, dimensions: '' }];
-    this.editMode = false;
-    this.editingId = null;
-  }
+// RESET
+resetForm() {
+
+  this.name = '';
+
+  this.parentCategory = '';
+
+  this.subCategory = '';
+
+  this.description = '';
+
+  this.files = [];
+
+  this.existingImages = [];
+
+  this.variants = [
+    {
+      label: 'Standard',
+      price: 0,
+      dimensions: ''
+    }
+  ];
+
+  this.editMode = false;
+
+  this.editingId = null;
+
+}
 
 
   removeFile(index: number) {

@@ -25,8 +25,11 @@ selectedProduct: any = null;
   token: string = '';
   username = '';
   password = '';
+  parentCategories: string[] = [];
   parentCategory = '';
+
 subCategory = '';
+subCategories: string[] = [];
   existingImages: string[] = [];
 
   products: any[] = [];
@@ -94,6 +97,27 @@ this.fetchProducts();
   }).subscribe({
     next: (data: any) => {
       this.products = data;
+      // ================= PARENT CATEGORIES =================
+this.parentCategories = [
+
+  ...new Set(
+
+    this.products.map((p: any) =>
+
+      p.parentCategory ||
+
+      p.category
+
+    )
+
+  )
+
+];
+
+this.parentCategories.sort();
+
+// ================= SUB CATEGORIES =================
+this.updateSubCategories();
     },
     error: (err) => {
       console.error("FETCH PRODUCTS ERROR:", err);
@@ -103,6 +127,50 @@ this.fetchProducts();
       }
     }
   });
+}
+
+updateSubCategories() {
+
+  this.subCategories = [
+
+    ...new Set(
+
+      this.products
+
+        .filter((p: any) =>
+
+          (
+            p.parentCategory ||
+
+            p.category
+          ) === this.parentCategory
+
+        )
+
+        .map((p: any) => p.subCategory)
+
+        .filter(Boolean)
+
+    )
+
+  ];
+
+  this.subCategories.sort();
+
+}
+
+formatLabel(value: string): string {
+
+  if (!value) return '';
+
+  return value
+
+    .replace(/-/g, ' ')
+
+    .replace(/\b\w/g, c =>
+      c.toUpperCase()
+    );
+
 }
 
   // FILE
@@ -117,79 +185,159 @@ onFileChange(event: Event) {
   input.value = ''; // 🔥 important
 }
   // SUBMIT
-// SUBMIT
 submitForm() {
+
+  // ================= VALIDATION =================
+  if (!this.name.trim()) {
+
+    alert('Product name required');
+
+    return;
+
+  }
+
+  if (!this.parentCategory.trim()) {
+
+    alert('Main category required');
+
+    return;
+
+  }
 
   const formData = new FormData();
 
-  formData.append('name', this.name);
+  // ================= NORMALIZE CATEGORIES =================
+  const normalizedParent = this.parentCategory
 
-  // NEW CATEGORY STRUCTURE
+    .trim()
+
+    .toLowerCase()
+
+    .replace(/\s+/g, '-');
+
+  const normalizedSub = this.subCategory
+
+    ? this.subCategory
+
+        .trim()
+
+        .toLowerCase()
+
+        .replace(/\s+/g, '-')
+
+    : '';
+
+  // ================= BASIC =================
   formData.append(
-    'parentCategory',
-    this.parentCategory
+    'name',
+    this.name
   );
 
-// OPTIONAL SUBCATEGORY
-formData.append(
-  'subCategory',
-  this.subCategory || ''
-);
+  // ================= CATEGORY STRUCTURE =================
+  formData.append(
+    'parentCategory',
+    normalizedParent
+  );
 
-// category fallback
-formData.append(
-  'category',
-  this.subCategory
-    ? this.subCategory
-    : this.parentCategory
-);
+  // OPTIONAL SUBCATEGORY
+  formData.append(
+    'subCategory',
+    normalizedSub
+  );
 
+  // BACKWARD COMPATIBILITY
+  formData.append(
+    'category',
+    normalizedSub || normalizedParent
+  );
+
+  // ================= DESCRIPTION =================
   formData.append(
     'description',
     this.description
   );
 
+  // ================= VARIANTS =================
   formData.append(
     'variants',
     JSON.stringify(this.variants)
   );
 
+  // ================= EXISTING IMAGES =================
   formData.append(
     'existing_images',
     JSON.stringify(this.existingImages)
   );
 
-  // FILES
+  // ================= FILES =================
   if (this.files.length > 0) {
 
-    this.files.forEach(file =>
-      formData.append('files', file)
-    );
+    this.files.forEach(file => {
+
+      formData.append(
+        'files',
+        file
+      );
+
+    });
 
   }
 
+  // ================= API URL =================
   const url = this.editMode
+
     ? `${environment.apiUrl}/admin/update-product/${this.editingId}`
+
     : `${environment.apiUrl}/admin/castle-products`;
 
+  // ================= METHOD =================
   const method =
-    this.editMode ? 'PUT' : 'POST';
+    this.editMode
+      ? 'PUT'
+      : 'POST';
 
+  // ================= REQUEST =================
   fetch(url, {
+
     method: method,
 
     headers: {
+
       Authorization:
         `Bearer ${localStorage.getItem('token')}`
+
     },
 
     body: formData
+
   })
-  .then(() => {
+
+  .then(async (res) => {
+
+    if (!res.ok) {
+
+      const err = await res.json();
+
+      console.error(err);
+
+      alert(
+        err.detail || 'Something went wrong'
+      );
+
+      return;
+    }
 
     this.resetForm();
 
     this.fetchProducts();
+
+  })
+
+  .catch((err) => {
+
+    console.error(err);
+
+    alert('Failed to save product');
 
   });
 
@@ -208,53 +356,74 @@ formData.append(
 
 
   // EDIT
-// EDIT
 editProduct(product: any) {
 
-  this.name = product.name;
+  this.name =
+    product.name || '';
 
-  // NEW CATEGORY STRUCTURE
-// PARENT CATEGORY REQUIRED
-this.parentCategory =
-  product.parentCategory ||
-  product.category ||
-  '';
+  // ================= CATEGORY =================
+  this.parentCategory =
 
-// SUB CATEGORY OPTIONAL
-this.subCategory =
-  product.subCategory || '';
+    product.parentCategory ||
 
+    product.category ||
+
+    '';
+
+  // LOAD SUBCATEGORY OPTIONS
+  this.updateSubCategories();
+
+  // ================= SUB CATEGORY =================
+  this.subCategory =
+    product.subCategory || '';
+
+  // ================= DESCRIPTION =================
   this.description =
-    product.description;
+    product.description || '';
 
-  // VARIANTS
+  // ================= VARIANTS =================
   if (product.variants?.length) {
 
     this.variants =
       product.variants.map((v: any) => ({
 
         label:
+
           v.label ||
+
           v.type ||
+
           'Default',
 
-        price: v.price,
+        price:
+          v.price || 0,
 
         dimensions:
           v.dimensions || ''
 
       }));
 
+  } else {
+
+    this.variants = [
+      {
+        label: 'Standard',
+        price: 0,
+        dimensions: ''
+      }
+    ];
+
   }
 
-  // EXISTING IMAGES
+  // ================= EXISTING IMAGES =================
   this.existingImages = [
     ...(product.images || [])
   ];
 
-  // RESET NEW FILES
+  // ================= RESET NEW FILES =================
   this.files = [];
 
+  // ================= EDIT MODE =================
   this.editMode = true;
 
   this.editingId = product.id;
@@ -262,7 +431,6 @@ this.subCategory =
 }
 
   // RESET
-// RESET
 resetForm() {
 
   this.name = '';
@@ -276,6 +444,8 @@ resetForm() {
   this.files = [];
 
   this.existingImages = [];
+
+  this.subCategories = [];
 
   this.variants = [
     {

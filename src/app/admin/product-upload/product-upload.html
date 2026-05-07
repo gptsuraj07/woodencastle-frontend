@@ -68,44 +68,109 @@
     </div>
 
     <!-- ================= BASIC INFO ================= -->
-    <div class="card">
+<div class="card">
 
-      <h4>
-        Basic Info
-      </h4>
+  <h4>
+    Basic Info
+  </h4>
 
-      <!-- PRODUCT NAME -->
-      <input
-        [(ngModel)]="name"
-        placeholder="Product Name"
-      >
+  <!-- PRODUCT NAME -->
+  <input
+    [(ngModel)]="name"
+    placeholder="Product Name"
+  >
 
-      <!-- PARENT CATEGORY -->
-      <input
-        [(ngModel)]="parentCategory"
-        placeholder="Main Category (required)"
-      >
+  <!-- ================= MAIN CATEGORY ================= -->
+  <div class="input-group">
 
-      <!-- SUB CATEGORY -->
-      <input
-        [(ngModel)]="subCategory"
-        placeholder="Sub Category (optional)"
-      >
+    <label>
+      Main Category *
+    </label>
 
-      <!-- DESCRIPTION -->
-      <div class="input-group">
+    <select
+      [(ngModel)]="parentCategory"
+      (change)="updateSubCategories()"
+    >
 
-        <label>
-          Product Description
-        </label>
+      <option value="">
+        Select Category
+      </option>
 
-        <textarea
+      @for (
+        cat of parentCategories;
+        track cat
+      ) {
 
-          [(ngModel)]="description"
+        <option [value]="cat">
 
-          rows="8"
+          {{ formatLabel(cat) }}
 
-          placeholder="Example:
+        </option>
+
+      }
+
+    </select>
+
+    <small class="helper-text">
+
+      Select existing category.
+
+    </small>
+
+  </div>
+
+  <!-- ================= SUB CATEGORY ================= -->
+  <div class="input-group">
+
+    <label>
+      Sub Category (optional)
+    </label>
+
+    <select
+      [(ngModel)]="subCategory"
+    >
+
+      <option value="">
+        No Sub Category
+      </option>
+
+      @for (
+        sub of subCategories;
+        track sub
+      ) {
+
+        <option [value]="sub">
+
+          {{ formatLabel(sub) }}
+
+        </option>
+
+      }
+
+    </select>
+
+    <small class="helper-text">
+
+      Optional grouping inside category.
+
+    </small>
+
+  </div>
+
+  <!-- ================= DESCRIPTION ================= -->
+  <div class="input-group">
+
+    <label>
+      Product Description
+    </label>
+
+    <textarea
+
+      [(ngModel)]="description"
+
+      rows="8"
+
+      placeholder="Example:
 
 • Premium solid walnut wood
 • Food-safe finish
@@ -113,19 +178,18 @@
 • Durable everyday usage
 • Natural wood grain finish"
 
-        ></textarea>
+    ></textarea>
 
-        <small class="helper-text">
+    <small class="helper-text">
 
-          Add each feature in a new line
-          for cleaner product descriptions.
+      Add each feature in a new line
+      for cleaner product descriptions.
 
-        </small>
+    </small>
 
-      </div>
+  </div>
 
-    </div>
-
+</div>
     <!-- ================= CATEGORY GUIDE ================= -->
     <div class="admin-guide">
 

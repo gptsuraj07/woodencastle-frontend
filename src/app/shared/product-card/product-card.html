@@ -33,7 +33,7 @@
   @if (parseVariants(product.variants).length > 0) {
   <div class="variants">
     @for (v of parseVariants(product.variants); track $index) {
-      <span>{{ v.type }}</span>
+      <span>{{ v.type || v.label }}</span>
     }
   </div>
 }

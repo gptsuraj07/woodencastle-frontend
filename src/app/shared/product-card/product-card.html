@@ -33,7 +33,7 @@
   @if (product.variants && product.variants.length > 0) {
     <div class="variants">
       @for (v of product.variants; track v) {
-        <span>{{ v.type }}</span>
+        <span>{{ v.type || v.type }}</span>
       }
     </div>
   }

@@ -1,87 +1,215 @@
 @if (!isAuthenticated) {
+
   <div class="login-container">
+
     <div class="login-box">
-      <h2>Admin Login</h2>
 
-      <input [(ngModel)]="username" placeholder="Username">
-      <input [(ngModel)]="password" type="password" placeholder="Password">
+      <h2>
+        Admin Login
+      </h2>
 
-      <button (click)="login()">Login</button>
+      <input
+        [(ngModel)]="username"
+        placeholder="Username"
+      >
+
+      <input
+        [(ngModel)]="password"
+        type="password"
+        placeholder="Password"
+      >
+
+      <button (click)="login()">
+        Login
+      </button>
+
     </div>
+
   </div>
+
 }
 
 @if (isAuthenticated) {
 
 <div class="admin-container">
 
-  <!-- LEFT PANEL -->
+  <!-- ================= LEFT PANEL ================= -->
   <div class="form-section">
 
+    <!-- HEADER -->
     <div class="form-header">
-      <h2>{{ editMode ? 'Edit Product' : 'Add Product' }}</h2>
 
-      @if (editMode) {
-        <button type="button" (click)="resetForm()">Cancel</button>
-      }
+      <h2>
+        {{ editMode ? 'Edit Product' : 'Add Product' }}
+      </h2>
 
-      <button class="logout-btn" (click)="logout()">Logout</button>
+      <div class="header-actions">
+
+        @if (editMode) {
+
+          <button
+            type="button"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+
+        }
+
+        <button
+          class="logout-btn"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+
+      </div>
+
     </div>
 
-    <!-- BASIC INFO -->
+    <!-- ================= BASIC INFO ================= -->
     <div class="card">
-      <h4>Basic Info</h4>
 
-      <input [(ngModel)]="name" placeholder="Product Name">
+      <h4>
+        Basic Info
+      </h4>
+
+      <!-- PRODUCT NAME -->
       <input
-  [(ngModel)]="parentCategory"
-  placeholder="Parent Category (example: chopping-boards)"
->
+        [(ngModel)]="name"
+        placeholder="Product Name"
+      >
 
-<input
-  [(ngModel)]="subCategory"
-  placeholder="Sub Category (example: walnut-chopping-boards)"
->
-      <textarea [(ngModel)]="description" placeholder="Description"></textarea>
+      <!-- PARENT CATEGORY -->
+      <input
+        [(ngModel)]="parentCategory"
+        placeholder="Main Category (required)"
+      >
+
+      <!-- SUB CATEGORY -->
+      <input
+        [(ngModel)]="subCategory"
+        placeholder="Sub Category (optional)"
+      >
+
+      <!-- DESCRIPTION -->
+      <div class="input-group">
+
+        <label>
+          Product Description
+        </label>
+
+        <textarea
+
+          [(ngModel)]="description"
+
+          rows="8"
+
+          placeholder="Example:
+
+• Premium solid walnut wood
+• Food-safe finish
+• Handcrafted in India
+• Durable everyday usage
+• Natural wood grain finish"
+
+        ></textarea>
+
+        <small class="helper-text">
+
+          Add each feature in a new line
+          for cleaner product descriptions.
+
+        </small>
+
+      </div>
+
     </div>
 
+    <!-- ================= CATEGORY GUIDE ================= -->
     <div class="admin-guide">
 
-  <h4>How Categories Work</h4>
+      <h4>
+        How Categories Work
+      </h4>
 
-  <div class="guide-box">
+      <div class="guide-box">
 
-    <p>
-      <strong>Parent Category</strong><br>
-      Main category shown in sidebar.<br>
+        <!-- PARENT -->
+        <p>
 
-      Example:
-      <code>chopping-boards</code>
-    </p>
+          <strong>
+            Main Category
+          </strong>
 
-    <p>
-      <strong>Sub Category</strong><br>
-      Category inside the parent category.<br>
+          <br>
 
-      Example:
-      <code>walnut-chopping-boards</code><br>
-      <code>teak-wooden-boards</code>
-    </p>
+          Main section shown in website sidebar.
 
-    <p>
-      <strong>Important:</strong><br>
+          <br><br>
 
-      Products with SAME parent category
-      will come under one common section.
+          Example:
 
-      Subcategory separates them inside.
-    </p>
+          <code>
+            chopping-boards
+          </code>
 
-    <hr>
+        </p>
 
-    <h5>Example Structure</h5>
+        <!-- SUB -->
+        <p>
 
-    <pre>
+          <strong>
+            Sub Category
+          </strong>
+
+          <br>
+
+          Optional category inside a main category.
+
+          <br><br>
+
+          Example:
+
+          <code>
+            walnut-chopping-boards
+          </code>
+
+          <br>
+
+          <code>
+            teak-wooden-boards
+          </code>
+
+        </p>
+
+        <!-- IMPORTANT -->
+        <p>
+
+          <strong>
+            Important
+          </strong>
+
+          <br>
+
+          Products with SAME main category
+          will appear together.
+
+          <br><br>
+
+          Subcategory helps separate products
+          inside that category.
+
+        </p>
+
+        <hr>
+
+        <!-- EXAMPLE -->
+        <h5>
+          Example Structure
+        </h5>
+
+<pre>
 Chopping Boards
  ├── Walnut Chopping Boards
  │     ├── Tilted Neck
@@ -90,79 +218,100 @@ Chopping Boards
  └── Teak Wooden Boards
        ├── Classic Teak
        ├── Chef Board
-    </pre>
+</pre>
 
-    <hr>
+        <hr>
 
-    <h5>Adding Product</h5>
+        <!-- ADD -->
+        <h5>
+          Adding Product
+        </h5>
 
-    <ul>
-      <li>
-        Add Parent Category first
-      </li>
+        <ul>
 
-      <li>
-        Add matching Sub Category
-      </li>
+          <li>
+            Add main category first
+          </li>
 
-      <li>
-        Upload max 4 images
-      </li>
+          <li>
+            Subcategory is optional
+          </li>
 
-      <li>
-        Add at least one variant with price
-      </li>
-    </ul>
+          <li>
+            Upload maximum 4 images
+          </li>
 
-    <hr>
+          <li>
+            Add at least one variant with price
+          </li>
 
-    <h5>Editing Product</h5>
+          <li>
+            Dimensions are optional
+          </li>
 
-    <ul>
-      <li>
-        Click product card on right side
-      </li>
+        </ul>
 
-      <li>
-        Existing images appear automatically
-      </li>
+        <hr>
 
-      <li>
-        Remove old images using ✕
-      </li>
+        <!-- EDIT -->
+        <h5>
+          Editing Product
+        </h5>
 
-      <li>
-        Add new images if needed
-      </li>
+        <ul>
 
-      <li>
-        Click Update Product
-      </li>
-    </ul>
+          <li>
+            Click product card on right side
+          </li>
 
-  </div>
+          <li>
+            Existing images load automatically
+          </li>
 
-</div>
+          <li>
+            Remove images using ✕
+          </li>
 
-    <!-- VARIANTS -->
+          <li>
+            Upload new images if needed
+          </li>
+
+          <li>
+            Click Update Product
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VARIANTS ================= -->
     <div class="card">
-      <h4>Variants</h4>
+
+      <h4>
+        Variants
+      </h4>
 
       @for (v of variants; track $index) {
+
         <div class="variant-row">
 
+          <!-- LABEL -->
           <input
             [(ngModel)]="v.label"
             name="label-{{$index}}"
-            placeholder="Variant (Small, Large)"
+            placeholder="Variant Name (Standard, Large)"
           >
 
+          <!-- DIMENSIONS -->
           <input
             [(ngModel)]="v.dimensions"
             name="dim-{{$index}}"
             placeholder="Dimensions (optional)"
           >
 
+          <!-- PRICE -->
           <input
             type="number"
             [(ngModel)]="v.price"
@@ -170,83 +319,184 @@ Chopping Boards
             placeholder="Price"
           >
 
-          <button type="button" (click)="removeVariant($index)">✕</button>
+          <!-- REMOVE -->
+          <button
+            type="button"
+            (click)="removeVariant($index)"
+          >
+            ✕
+          </button>
 
         </div>
+
       }
 
-      <button type="button" (click)="addVariant()">+ Add Variant</button>
+      <!-- ADD VARIANT -->
+      <button
+        type="button"
+        (click)="addVariant()"
+      >
+        + Add Variant
+      </button>
+
     </div>
 
-    <!-- IMAGES -->
+    <!-- ================= IMAGES ================= -->
     <div class="card">
-      <h4>Images</h4>
 
-      <input type="file" (change)="onFileChange($event)" multiple>
+      <h4>
+        Images
+      </h4>
+
+      <input
+        type="file"
+        (change)="onFileChange($event)"
+        multiple
+      >
 
       <p class="file-count">
-  {{ files.length }} / 4 images selected
-</p>
+        {{ files.length }} / 4 images selected
+      </p>
 
-<div class="preview">
+      <div class="preview">
 
-  <!-- EXISTING IMAGES -->
-  @for (img of existingImages; track img) {
-    <div class="preview-item">
+        <!-- EXISTING -->
+        @for (img of existingImages; track img) {
 
-      <img [src]="img">
+          <div class="preview-item">
 
-      <button type="button" (click)="removeExistingImage(img)">✕</button>
+            <img [src]="img">
+
+            <button
+              type="button"
+              (click)="removeExistingImage(img)"
+            >
+              ✕
+            </button>
+
+          </div>
+
+        }
+
+        <!-- NEW -->
+        @for (file of files; track $index) {
+
+          <div class="preview-item">
+
+            <img [src]="getPreview(file)">
+
+            <button
+              type="button"
+              (click)="removeFile($index)"
+            >
+              ✕
+            </button>
+
+          </div>
+
+        }
+
+      </div>
 
     </div>
-  }
 
-  <!-- NEW FILES -->
-  @for (file of files; track $index) {
-    <div class="preview-item">
+    <!-- ================= SUBMIT ================= -->
+    <button
+      class="submit-btn"
+      (click)="submitForm()"
+    >
 
-      <img [src]="getPreview(file)">
+      {{
+        editMode
+          ? 'Update Product'
+          : 'Add Product'
+      }}
 
-      <button type="button" (click)="removeFile($index)">✕</button>
-
-    </div>
-  }
-
-</div>
-    </div>
-
-    <!-- SUBMIT -->
-    <button class="submit-btn" (click)="submitForm()">
-      {{ editMode ? 'Update Product' : 'Add Product' }}
     </button>
 
   </div>
 
-  <!-- RIGHT PANEL -->
+  <!-- ================= RIGHT PANEL ================= -->
   <div class="list-section">
 
+    <!-- HEADER -->
     <div class="list-header">
-      <h2>Products</h2>
-      <span>Total: {{ products.length }}</span>
+
+      <h2>
+        Products
+      </h2>
+
+      <span>
+        Total: {{ products.length }}
+      </span>
+
     </div>
 
+    <!-- PRODUCT GRID -->
     <div class="grid">
 
       @for (product of products; track product.id) {
 
-        <div class="product-card" (click)="editProduct(product)">
+        <div
+          class="product-card"
+          (click)="editProduct(product)"
+        >
 
-          <img [src]="product.images[0]" alt="">
+          <!-- IMAGE -->
+          <img
+            [src]="product.images[0]"
+            alt=""
+          >
 
+          <!-- INFO -->
           <div class="info">
-            <h3>{{ product.name }}</h3>
-            <p class="price">₹ {{ getProductPrice(product) }}</p>
-            <p class="category">{{ product.category }}</p>
+
+            <h3>
+              {{ product.name }}
+            </h3>
+
+            <p class="price">
+              ₹ {{ getProductPrice(product) }}
+            </p>
+
+            <p class="category">
+
+              {{
+                product.parentCategory
+                  || product.category
+              }}
+
+            </p>
+
+            @if (product.subCategory) {
+
+              <p class="subcategory">
+
+                {{ product.subCategory }}
+
+              </p>
+
+            }
+
           </div>
 
+          <!-- ACTIONS -->
           <div class="actions">
-            <button class="edit" (click)="editProduct(product)">Edit</button>
-            <button class="delete" (click)="openDeleteModal(product)">Delete</button>
+
+            <button
+              class="edit"
+              (click)="editProduct(product)"
+            >
+              Edit
+            </button>
+
+            <button
+              class="delete"
+              (click)="openDeleteModal(product)"
+            >
+              Delete
+            </button>
+
           </div>
 
         </div>
@@ -259,29 +509,51 @@ Chopping Boards
 
 </div>
 
-<!-- 🔥 DELETE MODAL -->
+}
+
+<!-- ================= DELETE MODAL ================= -->
 @if (showDeleteModal) {
 
   <div class="modal-overlay">
 
     <div class="modal-box">
 
-      <h3>Delete Product</h3>
+      <h3>
+        Delete Product
+      </h3>
 
       <p>
+
         Are you sure you want to delete
-        <strong>{{ selectedProduct?.name }}</strong>?
+
+        <strong>
+          {{ selectedProduct?.name }}
+        </strong>
+
+        ?
+
       </p>
 
       <div class="modal-actions">
-        <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
-        <button class="delete-btn" (click)="confirmDelete()">Delete</button>
+
+        <button
+          class="cancel-btn"
+          (click)="cancelDelete()"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="delete-btn"
+          (click)="confirmDelete()"
+        >
+          Delete
+        </button>
+
       </div>
 
     </div>
 
   </div>
-
-}
 
 }

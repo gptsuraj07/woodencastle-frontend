@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { ProductService } from '../../products/product.service';
 import { Product } from '../../../core/models/product.model';
@@ -24,7 +24,7 @@ export class Shop implements OnInit {
 
   allProducts: Product[] = [];
   filteredProducts: Product[] = [];
-
+   @Output() productClick = new EventEmitter<Product>();
   searchText = '';
   selectedCategory = 'all';
   sortOption = 'default';
@@ -32,7 +32,7 @@ export class Shop implements OnInit {
   categories: string[] = [];
 
   constructor(
-    private productService: ProductService
+    private productService: ProductService, private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -143,5 +143,11 @@ export class Shop implements OnInit {
       .replace(/\b\w/g, c => c.toUpperCase());
 
   }
+
+
+  goToProduct(product: Product) {
+  console.log("CLICK RECEIVED IN HOME:", product);
+  this.router.navigate(['/products', product.id]);
+}
 
 }

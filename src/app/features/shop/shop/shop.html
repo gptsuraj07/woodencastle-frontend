@@ -96,6 +96,7 @@
       <app-product-card
         [product]="product"
         [priority]="i < 4"
+        (productClick)="goToProduct($event)"
       >
       </app-product-card>
 

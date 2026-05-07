@@ -30,13 +30,13 @@
   </div>
 
   <!-- VARIANTS -->
-  @if (product.variants && product.variants.length > 0) {
-    <div class="variants">
-      @for (v of product.variants; track v) {
-        <span>{{ v.type || v.type }}</span>
-      }
-    </div>
-  }
+  @if (parseVariants(product.variants).length > 0) {
+  <div class="variants">
+    @for (v of parseVariants(product.variants); track $index) {
+      <span>{{ v.type }}</span>
+    }
+  </div>
+}
 
   <!-- BUTTON -->
   <a class="view-btn" (click)="handleClick($event)">

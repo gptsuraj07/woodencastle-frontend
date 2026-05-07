@@ -33,12 +33,35 @@ getOptimizedImage(url: string): string {
 }
 
 getStartingPrice(product: any): number {
-  if (!product.variants || product.variants.length === 0) {
+  const variants = this.parseVariants(product.variants);
+
+  if (variants.length === 0) {
     return product.price || 0;
   }
 
   return Math.min(
-    ...product.variants.map((v: any) => v.price || 0)
+    ...variants.map((v: any) => v.price || 0)
   );
+}
+
+parseVariants(variants: any): any[] {
+  if (!variants) return [];
+
+  // already array
+  if (Array.isArray(variants)) {
+    return variants;
+  }
+
+  // stringified JSON
+  if (typeof variants === 'string') {
+    try {
+      return JSON.parse(variants);
+    } catch (e) {
+      console.error('Invalid variants JSON', e);
+      return [];
+    }
+  }
+
+  return [];
 }
 }

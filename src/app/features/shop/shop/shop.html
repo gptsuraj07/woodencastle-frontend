@@ -1,0 +1,106 @@
+<div class="shop-page">
+
+  <!-- HEADER -->
+  <div class="shop-header">
+
+    <div>
+
+      <h1>
+        Shop All
+      </h1>
+
+      <p>
+        Explore all products
+      </p>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+
+      <input
+        type="text"
+        placeholder="Search products..."
+        [(ngModel)]="searchText"
+        (input)="applyFilters()"
+      />
+
+    </div>
+
+  </div>
+
+  <!-- CATEGORY BAR -->
+  <div class="category-bar">
+
+    @for (cat of categories; track cat) {
+
+      <button
+        class="category-chip"
+        [class.active]="selectedCategory === cat"
+        (click)="selectCategory(cat)"
+      >
+
+        {{ formatLabel(cat) }}
+
+      </button>
+
+    }
+
+  </div>
+
+  <!-- SORT -->
+  <div class="sort-row">
+
+    <select
+      [(ngModel)]="sortOption"
+      (change)="applyFilters()"
+    >
+
+      <option value="default">
+        Sort
+      </option>
+
+      <option value="name-asc">
+        A → Z
+      </option>
+
+      <option value="name-desc">
+        Z → A
+      </option>
+
+    </select>
+
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="grid">
+
+    @if (filteredProducts.length === 0) {
+
+      <div class="empty-state">
+
+        <h3>
+          No products found
+        </h3>
+
+      </div>
+
+    }
+
+    @for (
+      product of filteredProducts;
+      track product.id;
+      let i = $index
+    ) {
+
+      <app-product-card
+        [product]="product"
+        [priority]="i < 4"
+      >
+      </app-product-card>
+
+    }
+
+  </div>
+
+</div>

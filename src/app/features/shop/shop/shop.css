@@ -1,0 +1,95 @@
+.shop-page {
+  padding: 2rem;
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.shop-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.shop-header p {
+  margin-top: 0.5rem;
+  color: #666;
+}
+
+.search-box input {
+  width: 280px;
+  max-width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.category-bar {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.category-chip {
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category-chip.active {
+  background: black;
+  color: white;
+}
+
+.sort-row {
+  margin-bottom: 1.5rem;
+}
+
+.sort-row select {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(240px, 1fr)
+  );
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+
+  .shop-page {
+    padding: 1rem;
+  }
+
+  .shop-header {
+    align-items: stretch;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .grid {
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 0.8rem;
+
+  }
+
+}

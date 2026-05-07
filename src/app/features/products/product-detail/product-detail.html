@@ -81,12 +81,32 @@
         <!-- <p class="cta-sub">⚡ Usually replies within 10 mins</p> -->
 
         <!-- DESCRIPTION -->
-        <div class="desc-box">
-          <h3>Product Description</h3>
-          <ul>
-            <li>{{ product.description }}</li>
-          </ul>
-        </div>
+       <div class="desc-box">
+
+  <h3>
+    Product Description
+  </h3>
+
+  <ul>
+
+    @for (
+      line of product.description.split('\n');
+      track line
+    ) {
+
+      @if (line.trim()) {
+
+        <li>
+          {{ line }}
+        </li>
+
+      }
+
+    }
+
+  </ul>
+
+</div>
 
       </div>
 

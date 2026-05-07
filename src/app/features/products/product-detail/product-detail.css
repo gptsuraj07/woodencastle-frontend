@@ -114,7 +114,17 @@
   margin-top: 20px;
 }
 
+.desc-box li {
+  margin-bottom: 10px;
+
+  line-height: 1.8;
+
+  color: #444;
+}
+
 .desc-box ul {
+    margin-top: 12px;
+
   padding-left: 18px;
 }
 

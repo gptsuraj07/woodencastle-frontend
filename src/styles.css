@@ -77,3 +77,107 @@ img {
   transform: translateY(-3px) scale(1.05);
   background: #1ebe5d;
 }
+
+/* =========================
+   MOVING ANNOUNCEMENT BAR
+========================= */
+
+.bottom-ticker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 42px;
+
+  background: #111;
+  color: #fff;
+
+  overflow: hidden;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+}
+
+/* SCROLLING CONTENT */
+.ticker-track {
+  display: inline-flex;
+  align-items: center;
+
+  white-space: nowrap;
+
+  min-width: max-content;
+
+  animation: tickerMove 28s linear infinite;
+}
+
+/* TEXT */
+.ticker-track span {
+  display: inline-block;
+
+  white-space: nowrap;
+
+  padding-right: 120px;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* ANIMATION */
+@keyframes tickerMove {
+  0% {
+    transform: translateX(10%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .bottom-ticker {
+    height: 38px;
+  }
+
+  .ticker-track span {
+    font-size: 12px;
+    padding-right: 80px;
+  }
+
+  .ticker-track {
+    animation-duration: 14s;
+  }
+
+  .whatsapp-float {
+    bottom: 50px !important;
+  }
+
+  body {
+    padding-bottom: 38px;
+  }
+}
+
+
+/* =========================
+   LAPTOP
+========================= */
+
+@media (min-width: 769px) {
+
+  .whatsapp-float {
+    bottom: 58px !important;
+  }
+
+  body {
+    padding-bottom: 42px;
+  }
+}

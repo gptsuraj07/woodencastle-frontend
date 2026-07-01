@@ -31,7 +31,7 @@ export class ProductList implements OnInit {
   sortOption: string = 'default';
 
   filteredProducts: Product[] = [];
-
+  loading = true;
   objectKeys = Object.keys;
 
   constructor(
@@ -81,6 +81,8 @@ export class ProductList implements OnInit {
 
         // FILTER
         this.applyFilters();
+        this.loading = false;
+
 
         // SCROLL RESTORE
         const lastId =

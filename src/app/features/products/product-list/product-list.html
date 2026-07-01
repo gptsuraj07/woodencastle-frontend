@@ -228,45 +228,65 @@
     <!-- ================= PRODUCT GRID ================= -->
     <div class="grid">
 
-      @if (filteredProducts.length === 0) {
+ @if (loading) {
 
-        <div class="empty-state">
+  @for (item of [1,2,3,4,5,6,7,8]; track item) {
 
-          <h3>
-            No products found
-          </h3>
+    <div class="product-skeleton">
 
-          <p>
-            Try different keywords
-          </p>
+      <div class="skeleton-image"></div>
 
-        </div>
+      <div class="skeleton-line title"></div>
 
-      }
+      <div class="skeleton-line short"></div>
 
-      @for (
-        product of filteredProducts;
-        track product.id;
-        let i = $index
-      ) {
-
-        <div
-          class="product-wrapper"
-          [id]="'product-' + product.id"
-        >
-
-          <app-product-card
-            [product]="product"
-            [priority]="i < 4"
-            (productClick)="selectProduct(product)"
-          >
-          </app-product-card>
-
-        </div>
-
-      }
+      <div class="skeleton-button"></div>
 
     </div>
+
+  }
+
+}
+
+  @else if (filteredProducts.length === 0) {
+
+    <div class="empty-state">
+
+      <h3>No products found</h3>
+
+      <p>Try different keywords</p>
+
+    </div>
+
+  }
+
+  @else {
+
+    @for (
+      product of filteredProducts;
+      track product.id;
+      let i = $index
+    ) {
+
+      <div
+        class="product-wrapper"
+        [id]="'product-' + product.id"
+      >
+
+        <app-product-card
+          [product]="product"
+          [priority]="i < 4"
+          (productClick)="selectProduct(product)"
+        >
+        </app-product-card>
+
+      </div>
+
+    }
+
+  }
+
+</div>
 
   </main>
 
